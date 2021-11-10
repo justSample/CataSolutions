@@ -64,5 +64,24 @@ namespace CataSolutions
             return result;
         }
 
+        public static string Solve(string s)
+        {
+            char[] chars = s.ToCharArray();
+
+            int countLower = chars.Where(c => char.IsLower(c)).Count();
+
+            int otherChars = chars.Count() - countLower;
+
+            if (countLower > otherChars || countLower == otherChars)
+                return s.ToLower();
+            else
+                return s.ToUpper();
+        }
+
+        public static string BestSolve(string s)
+        {
+            return s.Count(char.IsLower) < s.Length / 2 ? s.ToUpper() : s.ToLower();
+        }
+
     }
 }

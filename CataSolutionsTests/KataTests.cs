@@ -12,16 +12,19 @@ namespace CataSolutions.Tests
     public class KataTests
     {
 
-
-
-
-
         [TestMethod]
         public void SampleTest()
         {
             var check = Kata.TowerBuilder(7);
         }
 
-        
+        [TestMethod()]
+        public void SolveTest()
+        {
+            string result = Kata.Solve("DAta");
+            string result2 = Kata.Solve("Data");
+            string result3 = Kata.Solve("DATa");
+            string result4 = Kata.Solve("DATa");
+        }
     }
 }
