@@ -83,5 +83,50 @@ namespace CataSolutions
             return s.Count(char.IsLower) < s.Length / 2 ? s.ToUpper() : s.ToLower();
         }
 
+        public static string ToWeirdCase(string s)
+        {
+            char[] chars = s.ToCharArray();
+
+            int countLength = 0;
+
+            for (int i = 0; i < chars.Length; i++)
+            {
+
+                for (int j = i; j < chars.Length; j++)
+                {
+                    if (chars[j] != ' ')
+                        countLength++;
+                    else
+                        break;
+                }
+
+                for (int j = 0; j < countLength; j++, i++)
+                {
+                    if (j % 2 == 0)
+                    {
+                        chars[i] = char.ToUpper(chars[i]);
+                    }
+                    else
+                    {
+                        chars[i] = char.ToLower(chars[i]);
+                    }
+                }
+                countLength = 0;
+
+            }
+
+            return new string(chars);
+
+        }
+
+        public static string BestToWeirdCase(string s)
+        {
+            return string.Join(" ",
+              s.Split(' ')
+              .Select(w => string.Concat(
+                w.Select((ch, i) => i % 2 == 0 ? char.ToUpper(ch) : char.ToLower(ch)
+              ))));
+        }
+
     }
 }

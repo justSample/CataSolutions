@@ -26,5 +26,14 @@ namespace CataSolutions.Tests
             string result3 = Kata.Solve("DATa");
             string result4 = Kata.Solve("DATa");
         }
+
+        [TestMethod]
+        public void ShouldWorkForSomeExamples()
+        {
+            Assert.AreEqual("ThIs", Kata.ToWeirdCase("This"));
+            Assert.AreEqual("Is", Kata.ToWeirdCase("is"));
+            string lower = Kata.ToWeirdCase("This is a test");
+            Assert.AreEqual("ThIs Is A TeSt", lower);
+        }
     }
 }
