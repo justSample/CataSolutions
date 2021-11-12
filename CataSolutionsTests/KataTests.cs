@@ -35,5 +35,15 @@ namespace CataSolutions.Tests
             string lower = Kata.ToWeirdCase("This is a test");
             Assert.AreEqual("ThIs Is A TeSt", lower);
         }
+
+        [TestMethod]
+        public void TestSimple()
+        {
+            var expected = new int[] { 1, 1, 3, 3, 7, 2, 2, 2 };
+
+            var actual = Kata.DeleteNth(new int[] { 1, 1, 3, 3, 7, 2, 2, 2, 2 }, 3);
+
+            CollectionAssert.AreEqual(expected, actual);
+        }
     }
 }

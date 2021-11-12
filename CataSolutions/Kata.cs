@@ -128,5 +128,20 @@ namespace CataSolutions
               ))));
         }
 
+        public static int[] DeleteNth(int[] arr, int x)
+        {
+            List<int> toReturn = new List<int>();
+
+            for (int i = 0; i < arr.Length; i++)
+                if (toReturn.Where(c => c == arr[i]).Count() != x) toReturn.Add(arr[i]);
+
+            return toReturn.ToArray();
+        }
+
+        public static int[] BestDeleteNth(int[] arr, int x)
+        {
+            return arr.Where((t, i) => arr.Take(i + 1).Count(s => s == t) <= x).ToArray();
+        }
+
     }
 }
