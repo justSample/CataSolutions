@@ -45,5 +45,23 @@ namespace CataSolutions.Tests
 
             CollectionAssert.AreEqual(expected, actual);
         }
+
+        [TestMethod]
+        public void TestInArray()
+        {
+            string[] a1 = new string[] { "arp", "live", "strong" };
+            string[] a2 = new string[] { "lively", "alive", "harp", "sharp", "armstrong" };
+            string[] r = new string[] { "arp", "live", "strong" };
+
+            CollectionAssert.AreEqual(r, Kata.inArray(a1, a2));
+
+            string[] a3 = new string[] { "tarp", "mice", "bull" };
+            string[] a4 = new string[] { "lively", "alive", "harp", "sharp", "armstrong" };
+
+            string[] r2 = new string[] { };
+
+            CollectionAssert.AreEqual(r2, Kata.inArray(a3, a4));
+
+        }
     }
 }

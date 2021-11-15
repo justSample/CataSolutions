@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace CataSolutions
@@ -142,6 +143,50 @@ namespace CataSolutions
         {
             return arr.Where((t, i) => arr.Take(i + 1).Count(s => s == t) <= x).ToArray();
         }
+
+
+        public static string[] inArray(string[] array1, string[] array2)
+        {
+            List<string> toReturn = new List<string>();
+
+            for (int i = 0; i < array1.Length; i++)
+            {
+                Regex reg = new Regex(array1[i]);
+
+                for (int j = 0; j < array2.Length; j++)
+                {
+                    if(reg.Match(array2[j]).Length > 0)
+                    {
+                        toReturn.Add(array1[i]);
+                        break;
+                    }
+                }
+            }
+
+            return toReturn.Distinct().OrderBy(s => s).ToArray();
+        }
+
+        public static string[] BestInArray(string[] array1, string[] array2)
+        {
+            return array1.Distinct()
+                         .Where(s1 => array2.Any(s2 => s2.Contains(s1)))
+                         .OrderBy(s => s)
+                         .ToArray();
+        }
+
+
+        //        Expected
+        //        <[]string | len:5, cap:8>: ["cod", "code", "ewar", "ar", "wars"]
+        //        to equal
+        //        <[]string | len:5, cap:5>: ["ar", "cod", "code", "ewar", "wars"]
+
+        //Expected
+        //<[]string | len:5, cap:8>: ["ect", "omm", "he", "by", "ve"]
+        //to equal
+        //<[]string | len:5, cap:8>: ["by", "ect", "he", "omm", "ve"]
+
+
+
 
     }
 }
