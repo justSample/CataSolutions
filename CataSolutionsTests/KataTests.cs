@@ -63,5 +63,15 @@ namespace CataSolutions.Tests
             CollectionAssert.AreEqual(r2, Kata.inArray(a3, a4));
 
         }
+
+        [TestMethod]
+        public void TestCleanString()
+        {
+            Assert.AreEqual("ac", Kata.CleanString("abc#d##c"));
+            Assert.AreEqual("jf", Kata.CleanString("abjd####jfk#"));
+            Assert.AreEqual("*^7(Cyq!7c51Pm0Z&", Kata.CleanString("!#eE##l##f#*^7(Cyq!7oCy#KO*###Pn####cZ#51PmJ#0Q)#w##ZlhF#3##ndL*##o#jX#YH#Bc##Y######&S#*#UA##H#"));
+            Assert.AreEqual("6wEawR", Kata.CleanString("KA#X7###6lS5##y##wq#!$BP#TU#A##rD##Pu!H####%j###Msx####tuQKX#####X##EsZ##ane##wR"));
+            Assert.AreEqual("IZivm", Kata.CleanString(")&#6###Lb###p#a#UK#v)g###lu####!###@###n#wp##o#####Iy#Zivmta##M#"));
+        }
     }
 }

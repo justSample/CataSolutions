@@ -65,6 +65,7 @@ namespace CataSolutions
             return result;
         }
 
+
         public static string Solve(string s)
         {
             char[] chars = s.ToCharArray();
@@ -83,6 +84,7 @@ namespace CataSolutions
         {
             return s.Count(char.IsLower) < s.Length / 2 ? s.ToUpper() : s.ToLower();
         }
+
 
         public static string ToWeirdCase(string s)
         {
@@ -128,6 +130,7 @@ namespace CataSolutions
                 w.Select((ch, i) => i % 2 == 0 ? char.ToUpper(ch) : char.ToLower(ch)
               ))));
         }
+
 
         public static int[] DeleteNth(int[] arr, int x)
         {
@@ -175,18 +178,32 @@ namespace CataSolutions
         }
 
 
-        //        Expected
-        //        <[]string | len:5, cap:8>: ["cod", "code", "ewar", "ar", "wars"]
-        //        to equal
-        //        <[]string | len:5, cap:5>: ["ar", "cod", "code", "ewar", "wars"]
+        //Заметка. Можно бросать exception чтоб узнать какие данные есть в тестах
+        //using System;
+        //throw new Exception();
 
-        //Expected
-        //<[]string | len:5, cap:8>: ["ect", "omm", "he", "by", "ve"]
-        //to equal
-        //<[]string | len:5, cap:8>: ["by", "ect", "he", "omm", "ve"]
+        public static string CleanString(string text)
+        {
 
+            List<char> textChars = text.ToList();
 
+            for (int i = 0; i < textChars.Count; i++)
+            {
+                if(textChars[i] == '#' && i != 0)
+                {
+                    textChars.RemoveAt(i);
+                    textChars.RemoveAt(i - 1);
+                    i = -1;
+                }
+                else if(textChars[i] == '#' && (i == 0 || i == textChars.Count - 1))
+                {
+                    textChars.RemoveAt(i);
+                    i = -1;
+                }
+            }
 
+            return new string(textChars.ToArray());
+        }
 
     }
 }
