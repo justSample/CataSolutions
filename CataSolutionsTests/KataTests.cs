@@ -73,5 +73,45 @@ namespace CataSolutions.Tests
             Assert.AreEqual("6wEawR", Kata.CleanString("KA#X7###6lS5##y##wq#!$BP#TU#A##rD##Pu!H####%j###Msx####tuQKX#####X##EsZ##ane##wR"));
             Assert.AreEqual("IZivm", Kata.CleanString(")&#6###Lb###p#a#UK#v)g###lu####!###@###n#wp##o#####Iy#Zivmta##M#"));
         }
+
+        [TestMethod]
+        public void waveBasicTest1()
+        {
+            Kata kata = new Kata();
+            List<string> result = new List<string> { "Hello", "hEllo", "heLlo", "helLo", "hellO" };
+            Assert.AreEqual(result, kata.wave("hello"), "it should return '" + result + "'");
+        }
+
+        [TestMethod]
+        public void waveBasicTest2()
+        {
+            Kata kata = new Kata();
+            List<string> result = new List<string> { "Codewars", "cOdewars", "coDewars", "codEwars", "codeWars", "codewArs", "codewaRs", "codewarS" };
+            Assert.AreEqual(result, kata.wave("codewars"), "it should return '" + result + "'");
+        }
+
+        [TestMethod]
+        public void waveBasicTest3()
+        {
+            Kata kata = new Kata();
+            List<string> result = new List<string> { };
+            Assert.AreEqual(result, kata.wave(""), "it should return '" + result + "'");
+        }
+
+        [TestMethod]
+        public void waveBasicTest4()
+        {
+            Kata kata = new Kata();
+            List<string> result = new List<string> { "Two words", "tWo words", "twO words", "two Words", "two wOrds", "two woRds", "two worDs", "two wordS" };
+            Assert.AreEqual(result, kata.wave("two words"), "it should return '" + result + "'");
+        }
+
+        [TestMethod]
+        public void waveBasicTest5()
+        {
+            Kata kata = new Kata();
+            List<string> result = new List<string> { " Gap ", " gAp ", " gaP " };
+            Assert.AreEqual(result, kata.wave(" gap "), "it should return '" + result + "'");
+        }
     }
 }

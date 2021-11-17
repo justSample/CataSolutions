@@ -205,5 +205,30 @@ namespace CataSolutions
             return new string(textChars.ToArray());
         }
 
+        public List<string> wave(string str)
+        {
+
+            List<string> toReturn = new List<string>();
+
+            char[] charsStr = str.ToCharArray();
+
+            for (int i = 0; i < str.Length; i++)
+            {
+                if (charsStr[i] == ' ') continue;
+
+                charsStr[i] = char.ToUpper(charsStr[i]);
+                toReturn.Add(new string(charsStr));
+                charsStr[i] = char.ToLower(charsStr[i]);
+            }
+
+            return toReturn;
+        }
+
+        public List<string> bestWave(string str) =>
+          str
+            .Select((c, i) => str.Substring(0, i) + Char.ToUpper(c) + str.Substring(i + 1))
+            .Where(x => x != str)
+            .ToList();
+
     }
 }
