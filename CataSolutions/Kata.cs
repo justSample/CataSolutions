@@ -249,5 +249,46 @@ namespace CataSolutions
             return arr.OrderBy(x => x == 0).ToArray();
         }
 
+
+
+        public static int FindMissing(List<int> list)
+        {
+            
+            int difference = int.MinValue;
+            int indexDifferent = -1;
+
+            for (int i = 0, j = 1; i < list.Count; i++, j++)
+            {
+                if (j == list.Count) continue;
+
+                int dif = list[j] - list[i];
+
+                if (dif > difference)
+                {
+                    difference = dif;
+                    indexDifferent = i;
+                }
+
+            }
+
+            return list[indexDifferent + 1] - (difference / 2);
+        }
+
+        public static int BestFindMissing(List<int> list)
+        {
+            // Figure out the step of the Arithmetic Progression
+            int step = (list.Last() - list.First()) / list.Count();
+            int current = list.First();
+
+            // Iterate over the list and return the first value which is not present in the Progression
+            for (int i = 0; i < list.Count(); ++i)
+            {
+                if (list[i] != current) { return current; }
+                current += step;
+            }
+
+            throw new ArgumentException("No missing values were found in the provided list.");
+        }
+
     }
 }
