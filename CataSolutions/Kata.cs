@@ -230,5 +230,24 @@ namespace CataSolutions
             .Where(x => x != str)
             .ToList();
 
+
+        public static int[] MoveZeroes(int[] arr)
+        {
+
+            List<int> numbers = arr.ToList().Where(num => num != 0).ToList();
+
+            int countZero = arr.ToList().Where(num => num == 0).ToArray().Length;
+
+            for (int i = 0; i < countZero; i++)
+                numbers.Add(0);
+
+            return numbers.ToArray();
+        }
+
+        public static int[] BestMoveZeroes(int[] arr)
+        {
+            return arr.OrderBy(x => x == 0).ToArray();
+        }
+
     }
 }
