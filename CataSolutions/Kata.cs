@@ -290,5 +290,117 @@ namespace CataSolutions
             throw new ArgumentException("No missing values were found in the provided list.");
         }
 
+
+        //https://www.codewars.com/kata/5629db57620258aa9d000014/train/csharp
+        public static string Mix(string firstStr, string secondStr)
+        {
+
+            List<string> listToReturn = new List<string>();
+
+            Dictionary<char, int> firstCharsDictionary = new Dictionary<char, int>();
+            Dictionary<char, int> secondCharsDictionary = new Dictionary<char, int>();
+
+            char[] firstStrChars = firstStr.ToCharArray();
+            char[] secondStrChars = secondStr.ToCharArray();
+
+            for (int i = 0; i < secondStrChars.Length; i++)
+            {
+                if (firstCharsDictionary.ContainsKey(secondStrChars[i])) continue;
+
+                int countInFirstArr = firstStrChars.Where(c => c == secondStrChars[i]).Count();
+                firstCharsDictionary.Add(secondStrChars[i], countInFirstArr);
+
+            }
+
+            for (int i = 0; i < firstStrChars.Length; i++)
+            {
+                if (secondCharsDictionary.Keys.Contains(firstStrChars[i])) continue;
+
+                int countInSecondArr = secondStrChars.Where(c => c == firstStrChars[i]).Count();
+                secondCharsDictionary.Add(firstStrChars[i], countInSecondArr);
+            }
+
+            firstCharsDictionary.Remove(' ');
+            secondCharsDictionary.Remove(' ');
+
+            var tempFirstArr = firstCharsDictionary.Keys.Where(k => !char.IsLetterOrDigit(k)).ToArray();
+
+            for (int i = 0; i < tempFirstArr.Length; i++)
+            {
+                firstCharsDictionary.Remove(tempFirstArr[i]);
+            }
+
+            var tempSecondArr = secondCharsDictionary.Keys.Where(k => !char.IsLetterOrDigit(k)).ToArray();
+
+            for (int i = 0; i < tempSecondArr.Length; i++)
+            {
+                secondCharsDictionary.Remove(tempSecondArr[i]);
+            }
+
+            foreach (var charValue in firstCharsDictionary)
+            {
+
+                if (!secondCharsDictionary.ContainsKey(charValue.Key)) continue;
+
+                if (charValue.Value < 2 && secondCharsDictionary[charValue.Key] < 2) continue;
+
+                string toAdd = string.Empty;
+
+                if (secondCharsDictionary[charValue.Key] > charValue.Value)
+                {
+                    toAdd += "2:";
+
+                    for (int i = 0; i < secondCharsDictionary[charValue.Key]; i++)
+                    {
+                        toAdd += charValue.Key;
+                    }
+
+                }
+                else if (secondCharsDictionary[charValue.Key] < charValue.Value)
+                {
+                    toAdd += "1:";
+
+                    for (int i = 0; i < charValue.Value; i++)
+                    {
+                        toAdd += charValue.Key;
+                    }
+                }
+                else
+                {
+                    toAdd += "=:";
+
+                    for (int i = 0; i < charValue.Value; i++)
+                    {
+                        toAdd += charValue.Key;
+                    }
+
+                }
+
+
+                toAdd += "/";
+
+                listToReturn.Add(toAdd);
+            }
+
+
+            if (listToReturn.Count == 0) return "";
+
+
+            listToReturn = listToReturn.OrderByDescending(s => s.Count()).ThenByDescending(s => s).ToList();
+
+            if(listToReturn.Last().Last() == '/')
+                listToReturn[listToReturn.Count - 1] = listToReturn.Last().Remove(listToReturn.Last().Count() - 1, 1);
+
+            string toReturn = string.Empty;
+
+            for (int i = 0; i < listToReturn.Count; i++)
+            {
+                toReturn += listToReturn[i];
+            }
+
+            // your code
+            return toReturn;
+        }
+
     }
 }
