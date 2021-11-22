@@ -147,5 +147,54 @@ namespace CataSolutions.Tests
                     Kata.Mix("A generation must confront the looming ", "codewarrs"));
         }
 
+
+        [TestMethod]
+        public void SumIntervalsShouldHandleEmptyIntervalsTest()
+        {
+            Assert.AreEqual(0, Kata.SumIntervals(new (int, int)[] { }));
+            Assert.AreEqual(0, Kata.SumIntervals(new (int, int)[] { (4, 4), (6, 6), (8, 8) }));
+        }
+
+        [TestMethod]
+        public void SumIntervalsShouldAddDisjoinedIntervalsTest()
+        {
+            Assert.AreEqual(9, Kata.SumIntervals(new (int, int)[] { (1, 2), (6, 10), (11, 15) }));
+            Assert.AreEqual(11, Kata.SumIntervals(new (int, int)[] { (4, 8), (9, 10), (15, 21) }));
+            Assert.AreEqual(7, Kata.SumIntervals(new (int, int)[] { (-1, 4), (-5, -3) }));
+            Assert.AreEqual(78, Kata.SumIntervals(new (int, int)[] { (-245, -218), (-194, -179), (-155, -119) }));
+        }
+
+        [TestMethod]
+        public void SumIntervalsShouldAddAdjacentIntervalsTest()
+        {
+            Assert.AreEqual(54, Kata.SumIntervals(new (int, int)[] { (1, 2), (2, 6), (6, 55) }));
+            Assert.AreEqual(23, Kata.SumIntervals(new (int, int)[] { (-2, -1), (-1, 0), (0, 21) }));
+        }
+
+        [TestMethod]
+        public void SumIntervalsShouldAddOverlappingIntervalsTest()
+        {
+            Assert.AreEqual(7, Kata.SumIntervals(new (int, int)[] { (1, 4), (7, 10), (3, 5) }));
+            Assert.AreEqual(6, Kata.SumIntervals(new (int, int)[] { (5, 8), (3, 6), (1, 2) }));
+            Assert.AreEqual(19, Kata.SumIntervals(new (int, int)[] { (1, 5), (10, 20), (1, 6), (16, 19), (5, 11) }));
+        }
+
+        [TestMethod]
+        public void SumIntervalsShouldHandleMixedIntervalsTest()
+        {
+            Assert.AreEqual(13, Kata.SumIntervals(new (int, int)[] { (2, 5), (-1, 2), (-40, -35), (6, 8) }));
+            Assert.AreEqual(1234, Kata.SumIntervals(new (int, int)[] { (-7, 8), (-2, 10), (5, 15), (2000, 3150), (-5400, -5338) }));
+            Assert.AreEqual(158, Kata.SumIntervals(new (int, int)[] { (-101, 24), (-35, 27), (27, 53), (-105, 20), (-36, 26) }));
+        }
+
+        [TestMethod]
+        public void SumIntervalsShouldHandleRandomIntervalsTest()
+        {
+            Assert.AreEqual(19410, Kata.SumIntervals(new (int, int)[] { (-6214, 2339), (-3925, 8404), (-6335, 2279), (-1532, -1076), (-1910, 2009), (-5643, 2900), (195, 7610), (-5844, 5629), (-7459, -4028), (-7983, -2422), (-7400, -208), (-4992, 9663), (-8173, -7663), (-3328, -1358), (-9589, 7944), (901, 7886), (-7124, -5335), (-3209, 6222), (-4971, 1754), (-4104, 7066), (2413, 7885), (-8340, 9021), (-5402, -3559), (-1215, 2217), (1236, 8203), (6393, 8223), (-3323, 618), (-7454, 7293), (-5877, 3395), (-6262, 451), (-9718, 6992), (523, 1597), (5013, 7188), (4734, 9692), (3973, 7364), (-6126, 7511), (-8318, -1095), (-5868, 187), (771, 8002)}));
+            Assert.AreEqual(19417, Kata.SumIntervals(new (int, int)[] { (-7799, 3153), (-9381, 3553), (-8169, 7211), (-5915, 9169), (-846, 4095), (-4868, 3750), (-615, 4775), (-9482, -6825), (1571, 6665), (-6407, -4251), (2809, 3219), (-508, 8487), (-9874, 9483), (6212, 8970), (-9182, -3040), (-9077, 7413), (-2009, 4004), (-4233, 6359), (3599, 4332), (-2455, 9543), (3067, 4644), (-6556, 1086), (3327, 4022), (-1511, 694), (6274, 8688), (-8230, -7302), (-990, 7612), (-8142, -609), (-5939, 4666), (-9508, -7653), (-9802, -9002), (-1664, 7125) }));
+            Assert.AreEqual(19161, Kata.SumIntervals(new (int, int)[] { (-2110, -1711), (-92, 2001), (1808, 1969), (-6983, 4174), (-554, 3680), (-1982, 7468), (3606, 7906), (-6538, 2479), (3069, 3810), (-8199, -6008), (-5744, 8807), (-2013, 4950), (-6588, 7360), (2313, 7953), (-2337, -796), (-7300, 471), (-8844, -3412), (-6254, 2546), (-7730, 6353), (-3561, 5045), (6051, 6546), (2399, 7383), (-9805, 9356), }));
+            Assert.AreEqual(19404, Kata.SumIntervals(new (int, int)[] { (-4286, -82), (-8692, 7485), (-9444, 2029), (-3469, 8805), (-838, -487), (1996, 7915), (-7941, 311), (2261, 5006), (233, 9960), (-2162, -633), }));
+        }
+
     }
 }

@@ -402,5 +402,49 @@ namespace CataSolutions
             return toReturn;
         }
 
+
+        //бля, чувак решил это в 4 сука строчки ахахахаххахаа
+        //А у меня оптимизированнее
+        public static int SumIntervals((int, int)[] intervals)
+        {
+
+            List<int> countIntervals = new List<int>();
+
+            Dictionary<int, int> totalInterval = new Dictionary<int, int>();
+
+            foreach (var itemInt in intervals)
+            {
+                List<int> toAdd = new List<int>();
+
+                for (int i = itemInt.Item1; i < itemInt.Item2; i++)
+                {
+                    if (totalInterval.ContainsKey(i)) continue;
+
+                    toAdd.Add(i);
+                    totalInterval.Add(i, i);
+                }
+
+                countIntervals.Add(toAdd.Count);
+
+            }
+
+            int result = 0;
+
+            for (int i = 0; i < countIntervals.Count; i++)
+            {
+                result += countIntervals[i];
+            }
+
+            return result;
+        }
+
+        public static int BestSumIntervals((int, int)[] intervals)
+        {
+            return intervals
+              .SelectMany(i => Enumerable.Range(i.Item1, i.Item2 - i.Item1))
+              .Distinct()
+              .Count();
+        }
+
     }
 }
