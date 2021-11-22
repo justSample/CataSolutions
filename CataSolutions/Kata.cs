@@ -407,7 +407,6 @@ namespace CataSolutions
         //А у меня оптимизированнее
         public static int SumIntervals((int, int)[] intervals)
         {
-
             List<int> countIntervals = new List<int>();
 
             Dictionary<int, int> totalInterval = new Dictionary<int, int>();
@@ -445,6 +444,10 @@ namespace CataSolutions
               .Distinct()
               .Count();
         }
+
+
+        //Задача на будущее
+        //https://www.codewars.com/kata/52685f7382004e774f0001f7/train/csharp
 
     }
 }
