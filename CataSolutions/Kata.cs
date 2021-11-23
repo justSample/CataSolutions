@@ -480,5 +480,9 @@ namespace CataSolutions
             return string.Format("{0:d2}:{1:d2}:{2:d2}", seconds / 3600, seconds / 60 % 60, seconds % 60);
         }
 
+
+
+        //https://www.codewars.com/kata/521c2db8ddc89b9b7a0000c1/train/csharp Задача на будущее
+
     }
 }
