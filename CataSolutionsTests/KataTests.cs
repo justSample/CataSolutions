@@ -196,5 +196,15 @@ namespace CataSolutions.Tests
             Assert.AreEqual(19404, Kata.SumIntervals(new (int, int)[] { (-4286, -82), (-8692, 7485), (-9444, 2029), (-3469, 8805), (-838, -487), (1996, 7915), (-7941, 311), (2261, 5006), (233, 9960), (-2162, -633), }));
         }
 
+        [TestMethod]
+        public void HumanReadableTimeTest()
+        {
+            Assert.AreEqual("00:00:00", Kata.GetReadableTime(0));
+            Assert.AreEqual("00:00:05", Kata.GetReadableTime(5));
+            Assert.AreEqual("00:01:00", Kata.GetReadableTime(60));
+            Assert.AreEqual("23:59:59", Kata.GetReadableTime(86399));
+            Assert.AreEqual("99:59:59", Kata.GetReadableTime(359999));
+        }
+
     }
 }

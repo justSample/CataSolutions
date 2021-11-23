@@ -448,6 +448,37 @@ namespace CataSolutions
 
         //Задача на будущее
         //https://www.codewars.com/kata/52685f7382004e774f0001f7/train/csharp
+        public static string GetReadableTime(int seconds)
+        {
+            int bufTime = seconds;
+
+            int hours = 0;
+
+            for (int i = 1; 0 <= (bufTime - 3600); i++)
+            {
+                hours++;
+                bufTime -= 3600;
+            }
+
+            int min = 0;
+
+            for (int i = 1; 0 <= (bufTime - 60); i++)
+            {
+                min++;
+                bufTime -=  60;
+            }
+
+            int sec = bufTime;
+
+            string result = $"{hours.ToString("00")}:{min.ToString("00")}:{sec.ToString("00")}";
+
+            return result;
+        }
+
+        public static string BestGetReadableTime(int seconds)
+        {
+            return string.Format("{0:d2}:{1:d2}:{2:d2}", seconds / 3600, seconds / 60 % 60, seconds % 60);
+        }
 
     }
 }
