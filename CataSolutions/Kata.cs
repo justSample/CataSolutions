@@ -483,6 +483,157 @@ namespace CataSolutions
 
 
         //https://www.codewars.com/kata/521c2db8ddc89b9b7a0000c1/train/csharp Задача на будущее
+        //Later
+
+
+
+        //Мой код работает не хуже остальных. В некоторых случаях даже лучше
+        //Единственное что можно нормально исправить, это замена цифр этих бесполезных на умножение
+        // sec = seconds
+        // min = seconds - (60)
+        // hour = seconds - (60 * 60)
+        // days = seconds - (60 * 60 * 24)
+        // year = seconds - (60 * 60 * 24 * 365)
+        // Так будет выглядеть более лаконично что ли
+        public static string FormatDuration(int seconds)
+        {
+            int years = 0;
+            int days = 0;
+            int hours = 0;
+            int min = 0;
+            int sec = 0;
+
+            int bufTime = seconds;
+
+            for (; 0 <= (bufTime - 31536000) ;)
+            {
+                years++;
+                bufTime -= 31536000;
+            }
+
+            for (; 0 <= (bufTime - 86400) ;)
+            {
+                days++;
+                bufTime -= 86400;
+            }
+
+            for (; 0 <= (bufTime - 3600);)
+            {
+                hours++;
+                bufTime -= 3600;
+            }
+
+            for (; 0 <= (bufTime - 60);)
+            {
+                min++;
+                bufTime -= 60;
+            }
+
+            sec = bufTime;
+
+            List<string> toReturn = new List<string>();
+
+            if(years != 0)
+            {
+                if(years > 1)
+                {
+                    toReturn.Add("{0}" + years + " years{1}");
+                }
+                else
+                {
+                    toReturn.Add("{0}" + years + " year{1}");
+                }
+            }
+
+            if (days != 0)
+            {
+                if (days > 1)
+                {
+                    toReturn.Add("{0}"+ days + " days{1}");
+                }
+                else
+                {
+                    toReturn.Add("{0}" + days + " day{1}");
+                }
+            }
+
+            if (hours != 0)
+            {
+                if (hours > 1)
+                {
+                    toReturn.Add("{0}" + hours + " hours{1}");
+                }
+                else
+                {
+                    toReturn.Add("{0}" + hours + " hour{1}");
+                }
+            }
+
+            if (min != 0)
+            {
+                if (min > 1)
+                {
+                    toReturn.Add("{0}" + min + " minutes{1}");
+                }
+                else
+                {
+                    toReturn.Add("{0}" + min + " minute{1}");
+                }
+            }
+
+            if (sec != 0)
+            {
+                if (sec > 1)
+                {
+                    toReturn.Add("{0}" + sec + " seconds{1}");
+                }
+                else
+                {
+                    toReturn.Add("{0}" + sec + " second{1}");
+                }
+            }
+
+            if (toReturn.Count == 0)
+                return "now";
+
+            if (toReturn.Count == 1)
+                toReturn[toReturn.Count - 1] = string.Format(toReturn[toReturn.Count - 1], "", "");
+
+            if (toReturn.Count > 1)
+            {
+                for (int i = 0; i < toReturn.Count; i++)
+                {
+                    if (i == toReturn.Count - 2)
+                    {
+                        toReturn[i] = string.Format(toReturn[i], "", "");
+                        toReturn[i + 1] = string.Format(toReturn[i + 1], " and ", "");
+                        break;
+                    }
+                    else if (i == 0)
+                    {
+                        toReturn[i] = string.Format(toReturn[i], "", ", ");
+                        continue;
+                    }
+                    else
+                    {
+                        toReturn[i] = string.Format(toReturn[i], "", ", ");
+
+                    }
+
+                }
+            }
+
+            string completeResult = "";
+
+            for (int i = 0; i < toReturn.Count; i++)
+            {
+                completeResult += toReturn[i];
+            }
+
+            //Enter Code here
+            return completeResult;
+        }
+
 
     }
 }
