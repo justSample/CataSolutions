@@ -223,5 +223,16 @@ namespace CataSolutions.Tests
             Assert.AreEqual("1 year, 19 days, 18 hours, 19 minutes and 46 seconds", Kata.FormatDuration(33243586));
         }
 
+
+        [TestMethod]
+        public void NextBiggerNumberTest()
+        {
+            Assert.AreEqual(21, Kata.NextBiggerNumber(12));
+            Assert.AreEqual(531, Kata.NextBiggerNumber(513));
+            Assert.AreEqual(2071, Kata.NextBiggerNumber(2017));
+            Assert.AreEqual(441, Kata.NextBiggerNumber(414));
+            Assert.AreEqual(414, Kata.NextBiggerNumber(144));
+        }
+
     }
 }

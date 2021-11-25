@@ -635,5 +635,41 @@ namespace CataSolutions
         }
 
 
+        //Nice try
+        public static long NextBiggerNumber(long n)
+        {
+            //144. 3 num count
+            //414 144
+            //12. 2 num count
+            //21
+            char[] numbersChar = n.ToString().ToCharArray();
+
+            if (numbersChar.LongLength == 1) return n;
+
+            long maxNumber = n;
+
+            for (long i = 0; i < numbersChar.LongLength; i++)
+            {
+                if (!((i + 1) < numbersChar.LongLength)) continue;
+                
+                char buf = numbersChar[i];
+                char[] bufArr = new char[numbersChar.LongLength];
+
+                Array.Copy(numbersChar, bufArr, numbersChar.LongLength);
+
+                bufArr[i] = bufArr[i + 1];
+                bufArr[i + 1] = buf;
+
+                long number = long.Parse(new string(bufArr));
+
+                if (number > maxNumber)
+                    maxNumber = number;
+
+            }
+
+            //code me
+            return maxNumber;
+        }
+
     }
 }
