@@ -635,40 +635,54 @@ namespace CataSolutions
         }
 
 
-        //Nice try
+        //У меня проходят все тесты.... Но почему-то не проходят на сайте. Проверял на входе и выходе значения... 
+        //Такое чувство, они меняются когда попадают на тест
         public static long NextBiggerNumber(long n)
         {
-            //144. 3 num count
-            //414 144
-            //12. 2 num count
-            //21
             char[] numbersChar = n.ToString().ToCharArray();
 
-            if (numbersChar.LongLength == 1) return n;
+            if (numbersChar.Length == 1) return n;
 
-            long maxNumber = n;
+            int maxNumber = (int)n;
 
-            for (long i = 0; i < numbersChar.LongLength; i++)
+            for (int i = numbersChar.Length - 1; i >= 0; i--)
             {
-                if (!((i + 1) < numbersChar.LongLength)) continue;
+                if (!((i - 1) >= 0)) continue;
                 
-                char buf = numbersChar[i];
-                char[] bufArr = new char[numbersChar.LongLength];
+                char[] bufArr = new char[numbersChar.Length];
 
-                Array.Copy(numbersChar, bufArr, numbersChar.LongLength);
+                for (long j = 0; j < numbersChar.Length; j++)
+                {
+                    bufArr[j] = numbersChar[j];
+                }
 
-                bufArr[i] = bufArr[i + 1];
-                bufArr[i + 1] = buf;
+                char buf = bufArr[i];
+                bufArr[i] = bufArr[i - 1];
+                bufArr[i - 1] = buf;
 
-                long number = long.Parse(new string(bufArr));
+                int number = int.Parse(new string(bufArr));
 
                 if (number > maxNumber)
+                {
                     maxNumber = number;
+                    break;
+                }
 
             }
 
-            //code me
             return maxNumber;
+        }
+
+        //Я не знаю почему тут не работало как надо, но у него почему-то работает :(
+        public static long BestNextBiggerNumber(long n)
+        {
+            string nString = string.Concat(n.ToString().OrderByDescending(i => i));
+            if (nString == n.ToString()) return -1;
+            do
+            {
+                n++;
+            } while (!string.Equals(string.Concat(n.ToString().OrderByDescending(i => i)), nString));
+            return n;
         }
 
     }

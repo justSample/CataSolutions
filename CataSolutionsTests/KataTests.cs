@@ -232,6 +232,8 @@ namespace CataSolutions.Tests
             Assert.AreEqual(2071, Kata.NextBiggerNumber(2017));
             Assert.AreEqual(441, Kata.NextBiggerNumber(414));
             Assert.AreEqual(414, Kata.NextBiggerNumber(144));
+            Assert.AreEqual(123456798, Kata.NextBiggerNumber(123456789));
+            Assert.AreEqual(1234567908, Kata.NextBiggerNumber(12345));
         }
 
     }
