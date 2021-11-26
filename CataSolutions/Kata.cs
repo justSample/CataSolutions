@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -703,8 +704,6 @@ namespace CataSolutions
         ///5 - 3 = 2, 2 - (2 - 1) =                      // 3
 
 
-        //Partition (number theory)
-
         public static string Part(long n)
         {
             var partitionArrs = GetAllUniqueParts(n);
@@ -714,8 +713,8 @@ namespace CataSolutions
             int range = GetRange(prodArr);
             double avg = GetAvg(prodArr);
             float med = GetMedian(prodArr);
-            avg = (float)Math.Round(avg, 10);
-            string toReturn = string.Format("Range: {0} Average: {1} Median: {2}", range, string.Format("{0:0.00}",avg).Replace(',','.'), med.ToString("0.00").Replace(',', '.'));
+
+            string toReturn = string.Format("Range: {0} Average: {1} Median: {2}", range, avg.ToString("0.00",new NumberFormatInfo()).Replace(',','.'), med.ToString("0.00").Replace(',', '.'));
 
             return toReturn;
         }

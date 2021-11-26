@@ -251,6 +251,9 @@ namespace CataSolutions.Tests
             Assert.AreEqual("Range: 2 Average: 2.00 Median: 2.00", Kata.Part(3));
             Assert.AreEqual("Range: 3 Average: 2.50 Median: 2.50", Kata.Part(4));
             Assert.AreEqual("Range: 5 Average: 3.50 Median: 3.50", Kata.Part(5));
+            Assert.AreEqual("Range: 531440 Average: 26832.81 Median: 5865.00", Kata.Part(36));
+            Assert.AreEqual("Range: 1594322 Average: 63823.27 Median: 11475.00", Kata.Part(39));
+            Assert.AreEqual("Range: 5 Average: 3.50 Median: 3.50", Kata.Part(24));
         }
 
     }
