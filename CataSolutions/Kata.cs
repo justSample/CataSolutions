@@ -685,5 +685,160 @@ namespace CataSolutions
             return n;
         }
 
+
+        #region Partition (number theory)
+
+        //https://www.codewars.com/kata/55cf3b567fc0e02b0b00000b/train/csharp
+
+        //enum(5) -> [[5],[4,1],[3,2],[3,1,1],[2,2,1],[2,1,1,1],[1,1,1,1,1]]
+        //enum(4) -> [[4],[3,1],[2,2],[2,1,1],[1,1,1,1]]
+
+        ///Есть целое число
+        ///Нужно последовательно уменьшать на 1
+        ///Но не каждый раз.
+        ///При переходе на другое число, нужно уменьшать и прибавлять другое
+        ///5 - 0 = 5                = [5]  // 0
+        ///5 - 1 = 4, 4 - (4 - 1) = 1 = [4, 1]// 1
+        ///5 - 2 = 3, 3 - (3 - 1) = 2 = [3, 2]// 2
+        ///5 - 3 = 2, 2 - (2 - 1) =                      // 3
+
+
+        //Partition (number theory)
+
+        public static string Part(long n)
+        {
+            var partitionArrs = GetAllUniqueParts(n);
+
+            var prodArr = GetProd(partitionArrs);
+
+            int range = GetRange(prodArr);
+            double avg = GetAvg(prodArr);
+            float med = GetMedian(prodArr);
+            avg = (float)Math.Round(avg, 10);
+            string toReturn = string.Format("Range: {0} Average: {1} Median: {2}", range, string.Format("{0:0.00}",avg).Replace(',','.'), med.ToString("0.00").Replace(',', '.'));
+
+            return toReturn;
+        }
+
+        private static int[][] GetAllUniqueParts(long n)
+        {
+            int[] p = new int[n]; // An array to store a partition
+            int k = 0; // Index of last element in a partition
+            p[k] = (int)n; // Initialize first partition as number itself
+
+            List<int[]> temp = new List<int[]>();
+
+            // This loop first prints current partition then generates next
+            // partition. The loop stops when the current partition has all 1s
+            while (true)
+            {
+
+                // print current partition
+                //printArray(p, k + 1);
+                int[] tempArr = new int[k + 1];
+                Array.Copy(p, tempArr, (k + 1));
+                temp.Add(tempArr);
+                // Generate next partition
+
+                // Find the rightmost non-one value in p[]. Also, update the
+                // rem_val so that we know how much value can be accommodated
+                int rem_val = 0;
+                while (k >= 0 && p[k] == 1)
+                {
+                    rem_val += p[k];
+                    k--;
+                }
+
+                // if k < 0, all the values are 1 so there are no more partitions
+                if (k < 0) break;
+
+                // Decrease the p[k] found above and adjust the rem_val
+                p[k]--;
+                rem_val++;
+
+
+                // If rem_val is more, then the sorted order is violated. Divide
+                // rem_val in different values of size p[k] and copy these values at
+                // different positions after p[k]
+                while (rem_val > p[k])
+                {
+                    p[k + 1] = p[k];
+                    rem_val = rem_val - p[k];
+                    k++;
+                }
+
+                // Copy rem_val to next position and increment position
+                p[k + 1] = rem_val;
+                k++;
+            }
+
+            return temp.ToArray();
+        }
+
+        private static int[] GetProd(int[][] pertitionArrs)
+        {
+
+            List<int> toReturn = new List<int>(pertitionArrs.Length);
+
+
+            for (int i = 0; i < pertitionArrs.Length; i++)
+            {
+                int prod = 1;
+                for (int j = 0; j < pertitionArrs[i].Length; j++)
+                {
+                    prod *= pertitionArrs[i][j];
+                }
+                toReturn.Add(prod);
+            }
+
+
+            return toReturn.Distinct().OrderBy(i => i).ToArray();
+        }
+
+        private static int GetRange(int[] prod)
+        {
+            int max = prod.Max();
+            int min = prod.Min();
+
+            return max - min;
+        }
+
+        private static double GetAvg(int[] prod)
+        {
+            double sum = 0;
+            
+            for (int i = 0; i < prod.Length; i++)
+            {
+                sum += prod[i];
+            }
+
+            double avg = ((double)sum / (double)prod.Length);
+
+            return avg;
+        }
+
+        private static float GetMedian(int[] prod)
+        {
+            
+            int lenghtAllArr = prod.Length;
+
+            if((lenghtAllArr % 2) == 0)
+            {
+                int firstIndexArr = lenghtAllArr / 2;
+                int secondIndexArr = firstIndexArr - 1;
+
+                return (((float)prod[firstIndexArr] + (float)prod[secondIndexArr]) / 2f);
+
+            }
+            else
+            {
+                int midleIndex = lenghtAllArr / 2;
+                
+                return (float)prod[midleIndex];
+            }
+        }
+
+        #endregion
+
     }
 }

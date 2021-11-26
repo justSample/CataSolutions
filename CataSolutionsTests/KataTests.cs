@@ -236,5 +236,22 @@ namespace CataSolutions.Tests
             Assert.AreEqual(1234567908, Kata.NextBiggerNumber(12345));
         }
 
+
+        [TestMethod]
+        public void PartTest()
+        {
+
+            //Везде ошибка с приведением в avg
+            //Range: 1062881 Average: 47763.72 Median: 9152.00 - 38 // .73
+            //Range: 1594322 Average: 63823.27 Median: 11475.00 - 39 // .24
+            //Range: 531440 Average: 26832.81 Median: 5865.00 - 36 // avg = .80
+
+            Console.WriteLine("****** Basic Tests Small Numbers");
+            Assert.AreEqual("Range: 1 Average: 1.50 Median: 1.50", Kata.Part(2));
+            Assert.AreEqual("Range: 2 Average: 2.00 Median: 2.00", Kata.Part(3));
+            Assert.AreEqual("Range: 3 Average: 2.50 Median: 2.50", Kata.Part(4));
+            Assert.AreEqual("Range: 5 Average: 3.50 Median: 3.50", Kata.Part(5));
+        }
+
     }
 }
