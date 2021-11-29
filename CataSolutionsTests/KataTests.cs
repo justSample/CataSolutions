@@ -259,6 +259,7 @@ namespace CataSolutions.Tests
                     Kata.StripComments("apples, pears # and bananas\ngrapes\nbananas !apples", new string[] { "#", "!" }));
 
             Assert.AreEqual("a\nc\nd", Kata.StripComments("a #b\nc\nd $e f g", new string[] { "#", "$" }));
+            Assert.AreEqual("a\n b\nc", Kata.StripComments("a \n b \nc ", new string[] { "#", "$" }));
 
         }
 

@@ -842,59 +842,82 @@ namespace CataSolutions
 
         public static string StripComments(string text, string[] commentSymbols)
         {
-            char[] textChars = text.ToCharArray();
+            List<char> textChars = text.ToList();
 
-            string result = "";
+            int beginIndex = 0;
+            int endIndex = 0;
+            int countLine = 0;
 
-            for (int i = 0; i < textChars.Length; i++)
+            string toReturn = "";
+
+            for (int i = 0; i < textChars.Count; i++)
             {
-                int countLength = 0;
-                string line = "";
-                for (int j = i; j < textChars.Length; j++)
-                {
 
-                    //Проверка на \n
-                    if (textChars[j] == '\n' && (j + 1) < textChars.Length)
+                if (textChars[i] == '\n' || i == textChars.Count - 1)
+                {
+                    bool isHaveEnv = true;
+
+                    endIndex = i;
+
+                    string line = new string(textChars.ToArray());
+
+                    countLine++;
+
+                    line = line.Substring(beginIndex, countLine);
+
+                    for (int j = 0; j < commentSymbols.Length; j++)
                     {
-                        break;
+                        if (line.Contains(commentSymbols[j]))
+                        {
+                            int symbolIndex = line.IndexOf(commentSymbols[j]);
+                            int razdelIIndex = line.IndexOf('\n');
+
+                            if(razdelIIndex == -1)
+                            {
+                                isHaveEnv = false;
+                                line = line.Remove(symbolIndex);
+                                continue;
+                            }
+
+                            int count = razdelIIndex - symbolIndex;
+
+                            line = line.Remove(symbolIndex, count);
+                        }
                     }
 
-                    //Если он прошел эту проверку, значит это символ.
-                    countLength++;
+                    if(line.IndexOf('\n') == -1)
+                        isHaveEnv = false;
+
+                    line = line.TrimEnd();
+
+                    if (isHaveEnv)
+                        line += '\n';
+
+                    toReturn += line;
+                    
+                    beginIndex = (i + 1);
+
+                    countLine = 0;
 
                 }
-
-                line = text.Substring(i, countLength);
-
-                for (int j = 0; j < commentSymbols.Length; j++)
-                {
-                    if (line.Contains(commentSymbols[j]))
-                    {
-
-                        int indexSymbol = line.ToList().IndexOf(char.Parse(commentSymbols[j]));
-
-                        line = line.Remove(indexSymbol, line.Count() - indexSymbol);
-
-                    }
-                }
-
-                int index = line.Count() - 1;
-
-                while (char.IsWhiteSpace(line.ToArray()[index]))
-                {
-                    line = line.Remove(index, 1);
-                    index--;
-                }
-
-                if((i + countLength) < textChars.Length)
-                    result += line + '\n';
                 else
-                    result += line;
-                i += countLength;
+                {
+                    countLine++;
+                }
+
+                
             }
 
+            return toReturn;
 
-            return result;
+        }
+
+        //Бля, красиво
+        public static string BestStripComments(string text, string[] commentSymbols)
+        {
+            string[] lines = text.Split(new[] { "\n" }, StringSplitOptions.None);
+            lines = lines.Select(x => x.Split(commentSymbols, StringSplitOptions.None).First().TrimEnd()).ToArray();
+            return string.Join("\n", lines);
         }
 
     }
