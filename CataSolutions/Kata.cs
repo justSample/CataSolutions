@@ -839,5 +839,63 @@ namespace CataSolutions
 
         #endregion
 
+
+        public static string StripComments(string text, string[] commentSymbols)
+        {
+            char[] textChars = text.ToCharArray();
+
+            string result = "";
+
+            for (int i = 0; i < textChars.Length; i++)
+            {
+                int countLength = 0;
+                string line = "";
+                for (int j = i; j < textChars.Length; j++)
+                {
+
+                    //Проверка на \n
+                    if (textChars[j] == '\n' && (j + 1) < textChars.Length)
+                    {
+                        break;
+                    }
+
+                    //Если он прошел эту проверку, значит это символ.
+                    countLength++;
+
+                }
+
+                line = text.Substring(i, countLength);
+
+                for (int j = 0; j < commentSymbols.Length; j++)
+                {
+                    if (line.Contains(commentSymbols[j]))
+                    {
+
+                        int indexSymbol = line.ToList().IndexOf(char.Parse(commentSymbols[j]));
+
+                        line = line.Remove(indexSymbol, line.Count() - indexSymbol);
+
+                    }
+                }
+
+                int index = line.Count() - 1;
+
+                while (char.IsWhiteSpace(line.ToArray()[index]))
+                {
+                    line = line.Remove(index, 1);
+                    index--;
+                }
+
+                if((i + countLength) < textChars.Length)
+                    result += line + '\n';
+                else
+                    result += line;
+                i += countLength;
+            }
+
+
+            return result;
+        }
+
     }
 }
