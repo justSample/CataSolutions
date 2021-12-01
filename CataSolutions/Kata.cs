@@ -938,6 +938,7 @@ namespace CataSolutions
             LeftAndRight,
             UpAndDown,
             Point,
+            None,
             Any
         }
 
@@ -1016,11 +1017,35 @@ namespace CataSolutions
             public TypeResult Move()
             {
 
+                var resultLeftRight = MoveLeftOrRight();
 
-                return false;
+                if (resultLeftRight == TypeResult.Complete)
+                {
+                    return TypeResult.Complete;
+                }
+                else if (resultLeftRight == TypeResult.Found)
+                {
+                    return TypeResult.Found;
+                }
 
+                var resultUpDown = MoveUpOrDown();
+
+                if(resultUpDown == TypeResult.Complete)
+                {
+                    return TypeResult.Complete;
+                }
+                else if(resultUpDown == TypeResult.Found)
+                {
+                    return TypeResult.Found;
+                }
+
+                return TypeResult.Error;
             }
 
+            //По сути метод делает следующее:
+            //  1. Проверяет число вверху
+            //  2. Проверяет число снизу
+            //  3. 
             private TypeResult MoveUpOrDown()
             {
                 Coord.Y++;
@@ -1034,25 +1059,137 @@ namespace CataSolutions
 
                 Coord.Y++;
 
-                
-                if (resultUp != TypeResult.Error)
+                GetCurretChar(out char prevChar);
+
+                if (resultUp == TypeResult.Found || resultUp == TypeResult.Complete)
                 {
                     SetCurretPosComplete();
 
                     Coord.Y++;
+
+                    var result = GetTypeDirFromMark(up);
+
+                    if (result == TypeDir.None)
+                        return TypeResult.NotFound;
+
+                    if (result == TypeDir.Any || result == TypeDir.UpAndDown)
+                    {
+                        CurretDir = result;
+                        return TypeResult.Found;
+                    }
+                    else if (result == TypeDir.Point)
+                    {
+                        if (prevChar == CORNER)
+                            return TypeResult.Error;
+
+                        return TypeResult.Complete;
+                    }
+                    else 
+                    {
+                        return TypeResult.Error;
+                    }
                 }
-                else if(resultDown != TypeResult.Error)
+
+                if(resultDown == TypeResult.Found || resultDown == TypeResult.Complete)
                 {
                     SetCurretPosComplete();
 
+                    Coord.Y--;
+
+                    var result = GetTypeDirFromMark(down);
+
+                    if (result == TypeDir.None)
+                        return TypeResult.NotFound;
+
+                    if (result == TypeDir.Any || result == TypeDir.UpAndDown)
+                    {
+                        CurretDir = result;
+                        return TypeResult.Found;
+                    }
+                    else if (result == TypeDir.Point)
+                    {
+                        if (prevChar == CORNER)
+                            return TypeResult.Error;
+
+                        return TypeResult.Complete;
+                    }
+                    else
+                    {
+                        return TypeResult.Error;
+                    }
+
                 }
-                return false;
+
+                return TypeResult.NotFound;
             }
 
             private TypeResult MoveLeftOrRight()
             {
+                Coord.X--;
 
-                return false;
+                var resultLeft = GetCurretChar(out char left);
+
+                Coord.X++;
+                Coord.X++;
+
+                var resultRight = GetCurretChar(out char right);
+
+                Coord.X--;
+
+                if (resultLeft == TypeResult.Found || resultLeft == TypeResult.Complete)
+                {
+                    SetCurretPosComplete();
+
+                    Coord.X--;
+
+                    var result = GetTypeDirFromMark(left);
+
+                    if (result == TypeDir.None)
+                        return TypeResult.NotFound;
+
+                    if (result == TypeDir.Any || result == TypeDir.LeftAndRight)
+                    {
+                        CurretDir = result;
+                        return TypeResult.Found;
+                    }
+                    else if (result == TypeDir.Point)
+                    {
+                        return TypeResult.Complete;
+                    }
+                    else
+                    {
+                        return TypeResult.Error;
+                    }
+                }
+
+                if (resultRight == TypeResult.Found || resultRight == TypeResult.Complete)
+                {
+                    SetCurretPosComplete();
+
+                    Coord.X++;
+
+                    var result = GetTypeDirFromMark(right);
+                    
+                    if (result == TypeDir.None)
+                        return TypeResult.NotFound;
+
+                    if (result == TypeDir.Any || result == TypeDir.LeftAndRight)
+                    {
+                        CurretDir = result;
+                        return TypeResult.Found;
+                    }
+                    else if (result == TypeDir.Point)
+                    {
+                        return TypeResult.Complete;
+                    }
+                    else
+                    {
+                        return TypeResult.Error;
+                    }
+
+                }
+
+                return TypeResult.NotFound;
             }
 
             private TypeResult GetCurretChar(out char toReturn)
@@ -1060,7 +1197,14 @@ namespace CataSolutions
                 try
                 {
                     toReturn = Grid[Coord.Y][Coord.X];
-                    return TypeResult.Complete;
+
+                    if (toReturn == FREE_SPACE || toReturn == COMPLETE_STEP)
+                        return TypeResult.NotFound;
+
+                    if (toReturn == POINT)
+                        return TypeResult.Complete;
+                    else
+                        return TypeResult.Found;
                 }
                 catch
                 {
@@ -1069,30 +1213,27 @@ namespace CataSolutions
                 }
             }
 
+            private TypeDir GetTypeDirFromMark(char mark)
+            {
+
+                switch (mark)
+                {
+                    default:
+                    case FREE_SPACE:
+                    case COMPLETE_STEP:
+                        return TypeDir.None;
+
+                    case CORNER: return TypeDir.Any;
+                    case LEFT_RIGHT: return TypeDir.LeftAndRight;
+                    case UP_DOWN: return TypeDir.UpAndDown;
+                    case POINT: return TypeDir.Point;
+                }
+
+            }
+
             private void SetCurretPosComplete()
             {
                 Grid[Coord.Y][Coord.X] = COMPLETE_STEP;
-            }
-
-            private TypeResult CheckAndSetCurretDir(char mark)
-            {
-
-                switch (CurretDir)
-                {
-                    case TypeDir.Any:
-
-
-
-                        break;
-                    case TypeDir.LeftAndRight:
-                        break;
-                    case TypeDir.UpAndDown:
-                        break;
-                    default:
-                        break;
-                }
-
-                return TypeResult.Complete;
             }
 
         }
@@ -1105,228 +1246,41 @@ namespace CataSolutions
 
         public static bool Line(char[][] grid)
         {
-            //Найти X. Любой.
-            //Проверить от этого X вниз влево вверх вправо
-            //Если есть такой символ, то идём переходим на него.
+            Bot bot = new Bot(grid);
 
-            Coord coord = new Coord();
+            TypeResult result;
 
-            bool isSearchComplete = false;
+            do
+            {
+
+                result = bot.Move();
+
+                WriteGrid(bot.Grid);
+
+                if (result == TypeResult.Complete)
+                {
+                    return true;
+
+                }else if (result == TypeResult.Error)
+                {
+                    return false;
+                }
+
+            } while (true);
+
+        }
+
+        private static void WriteGrid(char[][] grid)
+        {
 
             for (int i = 0; i < grid.Length; i++)
             {
                 for (int j = 0; j < grid[i].Length; j++)
                 {
-                    if(grid[i][j] == POINT)
-                    {
-                        coord.X = j;
-                        coord.Y = i;
-                        isSearchComplete = true;
-                        break;
-                    }
+                    System.Diagnostics.Debug.Write(grid[i][j]);
                 }
-                if (isSearchComplete)
-                    break;
+                System.Diagnostics.Debug.WriteLine("");
             }
-
-            if (!coord.IsMoreThenZero()) return false;
-
-            char prevChar = FREE_SPACE;
-
-            do
-            {
-
-                if (IsNextPoint(grid, coord))
-                    break;
-
-                //Проверка вверх
-                coord.Y++;
-                char upChar = GetGridChar(grid, coord);
-
-                if (upChar == COMPLETE_STEP)
-                {
-                    coord.Y--;
-                }
-                else if (upChar == LEFT_RIGHT)
-                {
-                    if (prevChar == UP_DOWN)
-                        return false;
-                }
-                else if (upChar == UP_DOWN ||
-                        upChar == CORNER)
-                {
-                    if (upChar == UP_DOWN)
-                        upChar = UP_DOWN;
-                    else
-                        upChar = CORNER;
-
-                    coord.Y--;
-
-                    grid[coord.Y][coord.X] = COMPLETE_STEP;
-
-                    coord.Y++;
-
-                    prevChar = upChar;
-                    continue;
-                }
-
-                //Проверка вниз
-                coord.Y--;
-
-                char downChar = GetGridChar(grid, coord);
-
-                if (downChar == COMPLETE_STEP)
-                {
-                    coord.Y++;
-                }
-                else if (downChar == LEFT_RIGHT)
-                {
-                    if (prevChar == UP_DOWN)
-                        return false;
-                }
-                else if (downChar == UP_DOWN ||
-                        downChar == CORNER)
-                {
-                    if (downChar == UP_DOWN)
-                        downChar = UP_DOWN;
-                    else
-                        downChar = CORNER;
-
-                    coord.Y++;
-
-                    grid[coord.Y][coord.X] = COMPLETE_STEP;
-
-                    coord.Y--;
-
-                    prevChar = downChar;
-                    continue;
-                }
-                
-                //Проверка влево
-
-                coord.X--;
-
-                char leftChar = GetGridChar(grid, coord);
-
-                if (leftChar == COMPLETE_STEP)
-                {
-                    coord.X++;
-                }
-                else if (leftChar == LEFT_RIGHT)
-                {
-                    if (prevChar == UP_DOWN)
-                        return false;
-                }
-                else if (leftChar == UP_DOWN ||
-                        leftChar == CORNER)
-                {
-                    if (leftChar == UP_DOWN)
-                        leftChar = UP_DOWN;
-                    else
-                        leftChar = CORNER;
-
-                    coord.X++;
-
-                    grid[coord.Y][coord.X] = COMPLETE_STEP;
-
-                    coord.X--;
-
-                    prevChar = leftChar;
-                    continue;
-                }
-
-                //Проверка вправо
-
-                coord.X++;
-
-                char rightChar = GetGridChar(grid, coord);
-
-                if (rightChar == COMPLETE_STEP)
-                {
-                    coord.X--;
-                }
-                else if (rightChar == LEFT_RIGHT)
-                {
-                    if (prevChar == UP_DOWN)
-                        return false;
-                }
-                else if (rightChar == UP_DOWN ||
-                        rightChar == CORNER)
-                {
-                    if (rightChar == UP_DOWN)
-                        rightChar = UP_DOWN;
-                    else
-                        rightChar = CORNER;
-
-                    coord.X--;
-
-                    grid[coord.Y][coord.X] = COMPLETE_STEP;
-
-                    coord.X++;
-
-                    prevChar = rightChar;
-                    continue;
-                }
-
-                return false;
-                
-            } while (true);
-
-            return true;
-        }
-
-        private static char GetGridChar(char[][] grid, Coord coord)
-        {
-            char toReturn;
-
-            try
-            {
-                toReturn = grid[coord.Y][coord.X];
-            }
-            catch
-            {
-                toReturn = '.';
-            }
-
-            return toReturn;
-        }
-
-        private static bool IsNextPoint(char[][] grid, Coord coord)
-        {
-
-            coord.Y++;
-            char up = GetGridChar(grid, coord);
-
-            if (up == POINT)
-                return true;
-
-            coord.Y--;
-
-            coord.Y--;
-            char down = GetGridChar(grid, coord);
-
-            if (down == POINT)
-                return true;
-
-            coord.Y++;
-
-            coord.X--;
-            char left = GetGridChar(grid, coord);
-
-            if (left == POINT)
-                return true;
-
-            coord.X++;
-
-            coord.X++;
-            char right = GetGridChar(grid, coord);
-
-            if (right == POINT)
-                return true;
-
-            coord.X--;
-
-            return false;
 
         }
 

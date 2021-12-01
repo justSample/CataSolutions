@@ -267,7 +267,187 @@ namespace CataSolutions.Tests
 
         #region Line Safari - Is that a line?
 
-        
+        //https://www.codewars.com/kata/59c5d0b0a25c8c99ca000237/train/csharp
+
+        [TestMethod]
+        public void GridExGood1()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "           ",
+            "X---------X",
+            "           ",
+            "           "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExGood2()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "     ",
+            "  X  ",
+            "  |  ",
+            "  |  ",
+            "  X  "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExGood3()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "                    ",
+            "     +--------+     ",
+            "  X--+        +--+  ",
+            "                 |  ",
+            "                 X  ",
+            "                    "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExGood4()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "                     ",
+            "    +-------------+  ",
+            "    |             |  ",
+            " X--+      X------+  ",
+            "                     "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExGood5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "                      ",
+            "   +-------+          ",
+            "   |      +++---+     ",
+            "X--+      +-+   X      "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+
+        // "Bad" examples from the Kata description.
+
+        [TestMethod]
+        public void GridExBad1()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "X-----|----X"
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad2()
+        {
+            var grid = MakeGrid(new[]
+            {
+            " X  ",
+            " |  ",
+            " +  ",
+            " X  "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad3()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "   |--------+    ",
+            "X---        ---+ ",
+            "               | ",
+            "               X "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad4()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "              ",
+            "   +------    ",
+            "   |          ",
+            "X--+      X   ",
+            "              "
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "      +------+",
+            "      |      |",
+            "X-----+------+",
+            "      |       ",
+            "      X       ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        private char[][] MakeGrid(string[] arr)
+        {
+            int y = arr.Length;
+            int x = arr[0].Length;
+
+            char[][] toReturn = new char[y][];
+
+            for (int i = 0; i < y; i++)
+            {
+                toReturn[i] = new char[x];
+
+                for (int j = 0; j < x; j++)
+                {
+                    toReturn[i][j] = arr[i][j];
+                }
+            }
+
+            return toReturn;
+        }
+
+        private void WriteGrid(char[][] grid)
+        {
+
+            for (int i = 0; i < grid.Length; i++)
+            {
+                for (int j = 0; j < grid[i].Length; j++)
+                {
+                    System.Diagnostics.Debug.Write(grid[i][j]);
+                }
+                System.Diagnostics.Debug.WriteLine("");
+            }
+
+        }
 
         #endregion
 
