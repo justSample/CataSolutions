@@ -950,6 +950,27 @@ namespace CataSolutions
             Error
         }
 
+        public enum CornerDir
+        {
+            LeftAndUp,
+            UpAndRight,
+            RightAndDown,
+            DownAndLeft
+        }
+
+        public class Corner
+        {
+            private Coord _prev;
+            private Coord _curret;
+            private Coord _next;
+
+            public bool IsCurret()
+            {
+
+            }
+
+        }
+
         public class Coord
         {
             public int X { get; set; }
@@ -1228,6 +1249,11 @@ namespace CataSolutions
                     case UP_DOWN: return TypeDir.UpAndDown;
                     case POINT: return TypeDir.Point;
                 }
+
+            }
+
+            private void IsCorrectCorner()
+            {
 
             }
 
