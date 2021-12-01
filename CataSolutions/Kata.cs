@@ -955,44 +955,116 @@ namespace CataSolutions
             LeftAndUp,
             UpAndRight,
             RightAndDown,
-            DownAndLeft
+            DownAndLeft,
+            None
         }
 
         public class Corner
         {
-            private Coord _prev;
-            private Coord _curret;
-            private Coord _next;
-
-            public bool IsCurret()
+            public bool IsCurrent(Vector2 prev, Vector2 next)
             {
+                Vector2 dif = next - prev;
+
+                if ((dif.X >= -1 && dif.X <= 1) && (dif.Y >= -1 && dif.Y <= 1))
+                    return true;
+                else
+                    return false;
 
             }
 
         }
 
-        public class Coord
+        public class Vector2
         {
             public int X { get; set; }
             public int Y { get; set; }
 
-            public Coord()
+            public Vector2()
             {
                 X = -1;
                 Y = -1;
             }
 
-            public bool IsMoreThenZero()
+            public static Vector2 operator +(Vector2 v1, Vector2 v2)
             {
-                if (X <= -1 || Y <= -1) return false;
-                else return true;
+                return new Vector2() { X = (v1.X + v2.X), Y = (v1.Y + v2.Y)};
             }
+
+            public static Vector2 operator -(Vector2 v1, Vector2 v2)
+            {
+                return new Vector2() { X = (v1.X - v2.X), Y = (v1.Y - v2.Y) };
+            }
+
+        }
+
+        public class BufferPosition
+        {
+
+            public Vector2 Previous
+            {
+                get
+                {
+                    return _positions[1];
+                }
+
+            }
+
+            public Vector2 Current
+            {
+                get
+                {
+                    return _positions[2];
+                }
+            }
+
+            public Vector2 Next
+            {
+                get
+                {
+                    return _positions[3];
+                }
+            }
+
+            public int Count
+            {
+                get
+                {
+                    return _positions.Count;
+                }
+            }
+
+            private List<Vector2> _positions;
+
+            public BufferPosition()
+            {
+                _positions = new List<Vector2>(3);
+                
+            }
+
+            public void Add(Vector2 pos)
+            {
+                if (_positions.Count < 4)
+                {
+                    _positions.Add(new Vector2() { X = pos.X, Y = pos.Y });
+                    return;
+                }
+
+                _positions.RemoveAt(0);
+                
+                _positions.Add(new Vector2() { X = pos.X, Y = pos.Y });
+
+            }
+            
         }
 
         public class Bot
         {
 
-            public Coord Coord { get; private set; }
+            public Vector2 Position { get; private set; }
+
+            public Corner Corn { get; private set; }
+
+            public BufferPosition BufPos { get; private set; }
 
             public char[][] Grid { get; private set; }
 
@@ -1002,7 +1074,9 @@ namespace CataSolutions
             {
                 Grid = grid;
                 CurretDir = TypeDir.Any;
-                Coord = new Coord();
+                Position = new Vector2();
+                BufPos = new BufferPosition();
+                Corn = new Corner();
                 InitCoord();
             }
 
@@ -1016,8 +1090,8 @@ namespace CataSolutions
                     {
                         if (Grid[i][j] == POINT)
                         {
-                            Coord.X = j;
-                            Coord.Y = i;
+                            Position.X = j;
+                            Position.Y = i;
                             isSearchComplete = true;
                             break;
                         }
@@ -1026,8 +1100,6 @@ namespace CataSolutions
                         break;
                 }
             }
-
-            
 
             public bool IsNextMovePoint()
             {
@@ -1042,10 +1114,12 @@ namespace CataSolutions
 
                 if (resultLeftRight == TypeResult.Complete)
                 {
+                    BufPos.Add(Position);
                     return TypeResult.Complete;
                 }
                 else if (resultLeftRight == TypeResult.Found)
                 {
+                    BufPos.Add(Position);
                     return TypeResult.Found;
                 }
 
@@ -1053,10 +1127,12 @@ namespace CataSolutions
 
                 if(resultUpDown == TypeResult.Complete)
                 {
+                    BufPos.Add(Position);
                     return TypeResult.Complete;
                 }
                 else if(resultUpDown == TypeResult.Found)
                 {
+                    BufPos.Add(Position);
                     return TypeResult.Found;
                 }
 
@@ -1069,16 +1145,16 @@ namespace CataSolutions
             //  3. 
             private TypeResult MoveUpOrDown()
             {
-                Coord.Y++;
+                Position.Y++;
 
                 var resultUp = GetCurretChar(out char up);
 
-                Coord.Y--;
-                Coord.Y--;
+                Position.Y--;
+                Position.Y--;
 
                 var resultDown = GetCurretChar(out char down);
 
-                Coord.Y++;
+                Position.Y++;
 
                 GetCurretChar(out char prevChar);
 
@@ -1086,7 +1162,7 @@ namespace CataSolutions
                 {
                     SetCurretPosComplete();
 
-                    Coord.Y++;
+                    Position.Y++;
 
                     var result = GetTypeDirFromMark(up);
 
@@ -1115,7 +1191,7 @@ namespace CataSolutions
                 {
                     SetCurretPosComplete();
 
-                    Coord.Y--;
+                    Position.Y--;
 
                     var result = GetTypeDirFromMark(down);
 
@@ -1146,22 +1222,22 @@ namespace CataSolutions
 
             private TypeResult MoveLeftOrRight()
             {
-                Coord.X--;
+                Position.X--;
 
                 var resultLeft = GetCurretChar(out char left);
 
-                Coord.X++;
-                Coord.X++;
+                Position.X++;
+                Position.X++;
 
                 var resultRight = GetCurretChar(out char right);
 
-                Coord.X--;
+                Position.X--;
 
                 if (resultLeft == TypeResult.Found || resultLeft == TypeResult.Complete)
                 {
                     SetCurretPosComplete();
 
-                    Coord.X--;
+                    Position.X--;
 
                     var result = GetTypeDirFromMark(left);
 
@@ -1187,7 +1263,7 @@ namespace CataSolutions
                 {
                     SetCurretPosComplete();
 
-                    Coord.X++;
+                    Position.X++;
 
                     var result = GetTypeDirFromMark(right);
                     
@@ -1217,7 +1293,7 @@ namespace CataSolutions
             {
                 try
                 {
-                    toReturn = Grid[Coord.Y][Coord.X];
+                    toReturn = Grid[Position.Y][Position.X];
 
                     if (toReturn == FREE_SPACE || toReturn == COMPLETE_STEP)
                         return TypeResult.NotFound;
@@ -1252,14 +1328,17 @@ namespace CataSolutions
 
             }
 
-            private void IsCorrectCorner()
-            {
-
-            }
-
             private void SetCurretPosComplete()
             {
-                Grid[Coord.Y][Coord.X] = COMPLETE_STEP;
+                Grid[Position.Y][Position.X] = COMPLETE_STEP;
+            }
+
+            public bool IsCurretCorn()
+            {
+                if (BufPos.Count >= 4)
+                    return Corn.IsCurrent(BufPos.Previous, BufPos.Next);
+                else
+                    return true;
             }
 
         }
@@ -1282,6 +1361,9 @@ namespace CataSolutions
                 result = bot.Move();
 
                 WriteGrid(bot.Grid);
+
+                if (!bot.IsCurretCorn())
+                    return false;
 
                 if (result == TypeResult.Complete)
                 {
