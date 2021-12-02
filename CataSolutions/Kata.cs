@@ -933,45 +933,30 @@ namespace CataSolutions
 
         private const char COMPLETE_STEP = '.';
 
-        public enum TypeDir
-        {
-            LeftAndRight,
-            UpAndDown,
-            Point,
-            None,
-            Any
-        }
 
         public enum TypeResult
         {
+            Step,
             Complete,
-            Found,
-            NotFound,
             Error
         }
 
-        public enum CornerDir
+        public enum TypeCell
         {
-            LeftAndUp,
-            UpAndRight,
-            RightAndDown,
-            DownAndLeft,
-            None
+            LeftRight,
+            UpDown,
+            Corner,
+            Point,
+            FreeSpace,
+            CompleteStep
         }
 
-        public class Corner
+        public enum TypeDir
         {
-            public bool IsCurrent(Vector2 prev, Vector2 next)
-            {
-                Vector2 dif = next - prev;
-
-                if ((dif.X >= -1 && dif.X <= 1) && (dif.Y >= -1 && dif.Y <= 1))
-                    return true;
-                else
-                    return false;
-
-            }
-
+            LeftRight,
+            UpDown,
+            Corner,
+            Any
         }
 
         public class Vector2
@@ -983,6 +968,18 @@ namespace CataSolutions
             {
                 X = -1;
                 Y = -1;
+            }
+
+            public Vector2(int x, int y)
+            {
+                X = x;
+                Y = y;
+            }
+
+            public Vector2(Vector2 vector)
+            {
+                X = vector.X;
+                Y = vector.Y;
             }
 
             public static Vector2 operator +(Vector2 v1, Vector2 v2)
@@ -997,64 +994,127 @@ namespace CataSolutions
 
         }
 
-        public class BufferPosition
+        public class Cell
         {
 
-            public Vector2 Previous
+            public Vector2 Position { get; private set; }
+
+            public char Mark { get; private set; }
+
+            public TypeCell CellType { get; private set; }
+
+            public Cell(Vector2 pos, char mark)
             {
-                get
+                Position = new Vector2(pos);
+                Mark = mark;
+
+                InitTypeCell();
+            }
+
+            private void InitTypeCell()
+            {
+                switch (Mark)
                 {
-                    return _positions[1];
+                    case LEFT_RIGHT:
+                        CellType = TypeCell.LeftRight;
+                        break;
+                    case UP_DOWN:
+                        CellType = TypeCell.UpDown;
+                        break;
+                    case CORNER:
+                        CellType = TypeCell.Corner;
+                        break;
+                    case POINT:
+                        CellType = TypeCell.Point;
+                        break;
+                    case FREE_SPACE:
+                        CellType = TypeCell.FreeSpace;
+                        break;
+                    case COMPLETE_STEP:
+                        CellType = TypeCell.CompleteStep;
+                        break;
+
+                }
+            }
+
+            public void SetMark(char mark)
+            {
+                Mark = mark;
+                InitTypeCell();
+            }
+
+        }
+
+        public class Board
+        {
+
+            public Cell[][] Cells { get; private set; }
+
+            public Board(char[][] grid)
+            {
+                InitCells(grid);
+            }
+
+            private void InitCells(char[][] grid)
+            {
+
+                Cells = new Cell[grid.Length][];
+
+                for (int i = 0; i < grid.Length; i++)
+                {
+                    Cells[i] = new Cell[grid[i].Length];
+
+                    for (int j = 0; j < grid[i].Length; j++)
+                    {
+                        Cells[i][j] = new Cell(new Vector2(j, i), grid[i][j]);
+                    }
                 }
 
             }
 
-            public Vector2 Current
+            public Cell GetCell(Vector2 pos)
             {
-                get
+                try
                 {
-                    return _positions[2];
+                    var cell = Cells[pos.Y][pos.X];
+                    return cell;
+                }
+                catch
+                {
+                    return null;
                 }
             }
 
-            public Vector2 Next
+            public void SetCharCell(Vector2 pos, TypeCell type)
             {
-                get
+
+                switch (type)
                 {
-                    return _positions[3];
+
+                    case TypeCell.CompleteStep:
+                        Cells[pos.Y][pos.X].SetMark(COMPLETE_STEP);
+                        break;
+                    case TypeCell.Corner:
+                        Cells[pos.Y][pos.X].SetMark(CORNER);
+                        break;
+                    case TypeCell.FreeSpace:
+                        Cells[pos.Y][pos.X].SetMark(FREE_SPACE);
+                        break;
+                    case TypeCell.LeftRight:
+                        Cells[pos.Y][pos.X].SetMark(LEFT_RIGHT);
+                        break;
+                    case TypeCell.Point:
+                        Cells[pos.Y][pos.X].SetMark(POINT);
+                        break;
+                    case TypeCell.UpDown:
+                        Cells[pos.Y][pos.X].SetMark(UP_DOWN);
+                        break;
+
                 }
-            }
 
-            public int Count
-            {
-                get
-                {
-                    return _positions.Count;
-                }
-            }
-
-            private List<Vector2> _positions;
-
-            public BufferPosition()
-            {
-                _positions = new List<Vector2>(3);
                 
             }
 
-            public void Add(Vector2 pos)
-            {
-                if (_positions.Count < 4)
-                {
-                    _positions.Add(new Vector2() { X = pos.X, Y = pos.Y });
-                    return;
-                }
-
-                _positions.RemoveAt(0);
-                
-                _positions.Add(new Vector2() { X = pos.X, Y = pos.Y });
-
-            }
-            
         }
 
         public class Bot
@@ -1062,314 +1122,210 @@ namespace CataSolutions
 
             public Vector2 Position { get; private set; }
 
-            public Corner Corn { get; private set; }
+            public TypeDir CurrentDir { get; private set; }
 
-            public BufferPosition BufPos { get; private set; }
-
-            public char[][] Grid { get; private set; }
-
-            public TypeDir CurretDir { get; private set; }
+            public Board Board { get; private set; }
 
             public Bot(char[][] grid)
             {
-                Grid = grid;
-                CurretDir = TypeDir.Any;
-                Position = new Vector2();
-                BufPos = new BufferPosition();
-                Corn = new Corner();
-                InitCoord();
+                Board = new Board(grid);
+                CurrentDir = TypeDir.Any;
+                InitStartPosition();
             }
 
-            private void InitCoord()
+            private void InitStartPosition()
             {
-                bool isSearchComplete = false;
-
-                for (int i = 0; i < Grid.Length; i++)
+                bool isPoint = false;
+                for (int i = 0; i < Board.Cells.Length; i++)
                 {
-                    for (int j = 0; j < Grid[i].Length; j++)
+                    for (int j = 0; j < Board.Cells[i].Length; j++)
                     {
-                        if (Grid[i][j] == POINT)
+                        if(Board.Cells[i][j].Mark == POINT)
                         {
-                            Position.X = j;
-                            Position.Y = i;
-                            isSearchComplete = true;
+                            Position = new Vector2(Board.Cells[i][j].Position);
+                            isPoint = true;
                             break;
                         }
                     }
-                    if (isSearchComplete)
+                    if (isPoint)
                         break;
                 }
-            }
 
-            public bool IsNextMovePoint()
-            {
-
-                return false;
+                
             }
 
             public TypeResult Move()
             {
 
-                var resultLeftRight = MoveLeftOrRight();
+                Cell nextCell = SearchNextStep();
 
-                if (resultLeftRight == TypeResult.Complete)
-                {
-                    BufPos.Add(Position);
-                    return TypeResult.Complete;
-                }
-                else if (resultLeftRight == TypeResult.Found)
-                {
-                    BufPos.Add(Position);
-                    return TypeResult.Found;
-                }
+                if (nextCell == null) return TypeResult.Error;
 
-                var resultUpDown = MoveUpOrDown();
+                Cell currentCell = Board.GetCell(Position);
 
-                if(resultUpDown == TypeResult.Complete)
+                switch (nextCell.CellType)
                 {
-                    BufPos.Add(Position);
-                    return TypeResult.Complete;
-                }
-                else if(resultUpDown == TypeResult.Found)
-                {
-                    BufPos.Add(Position);
-                    return TypeResult.Found;
+                    case TypeCell.LeftRight:
+
+                        CurrentDir = TypeDir.LeftRight;
+                        Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                        Position = new Vector2(nextCell.Position);
+                        return TypeResult.Step;
+                        break;
+                    case TypeCell.UpDown:
+
+                        CurrentDir = TypeDir.UpDown;
+                        Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                        Position = new Vector2(nextCell.Position);
+                        return TypeResult.Step;
+                        break;
+                    case TypeCell.Corner:
+
+                        if(currentCell.CellType == TypeCell.LeftRight)
+                        {
+                            CurrentDir = TypeDir.UpDown;
+                            Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                            Position = new Vector2(nextCell.Position);
+                            return TypeResult.Step;
+                        }
+                        else if(currentCell.CellType == TypeCell.UpDown)
+                        {
+                            CurrentDir = TypeDir.LeftRight;
+                            Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                            Position = new Vector2(nextCell.Position);
+                            return TypeResult.Step;
+                        }
+                        else if(currentCell.CellType == TypeCell.Corner)
+                        {
+                            if(CurrentDir == TypeDir.LeftRight)
+                            {
+                                //UpDown
+                                CurrentDir = TypeDir.UpDown;
+                                Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                                Position = new Vector2(nextCell.Position);
+                                return TypeResult.Step;
+                            }
+                            else if(CurrentDir == TypeDir.UpDown)
+                            {
+                                //LeftRight
+                                CurrentDir = TypeDir.LeftRight;
+                                Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                                Position = new Vector2(nextCell.Position);
+                                return TypeResult.Step;
+                            }
+                        }
+
+                        break;
+                    case TypeCell.Point:
+                        Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
+                        Position = new Vector2(nextCell.Position);
+                        return TypeResult.Complete;
+                        break;
                 }
 
                 return TypeResult.Error;
             }
 
-            //По сути метод делает следующее:
-            //  1. Проверяет число вверху
-            //  2. Проверяет число снизу
-            //  3. 
-            private TypeResult MoveUpOrDown()
+
+            private Cell SearchNextStep()
             {
-                Position.Y++;
 
-                var resultUp = GetCurretChar(out char up);
+                Cell up = CellUp();
+                Cell down = CellDown();
+                Cell left = CellLeft();
+                Cell right = CellRight();
 
-                Position.Y--;
-                Position.Y--;
-
-                var resultDown = GetCurretChar(out char down);
-
-                Position.Y++;
-
-                GetCurretChar(out char prevChar);
-
-                if (resultUp == TypeResult.Found || resultUp == TypeResult.Complete)
+                if(left != null)
                 {
-                    SetCurretPosComplete();
-
-                    Position.Y++;
-
-                    var result = GetTypeDirFromMark(up);
-
-                    if (result == TypeDir.None)
-                        return TypeResult.NotFound;
-
-                    if (result == TypeDir.Any || result == TypeDir.UpAndDown)
-                    {
-                        CurretDir = result;
-                        return TypeResult.Found;
-                    }
-                    else if (result == TypeDir.Point)
-                    {
-                        if (prevChar == CORNER)
-                            return TypeResult.Error;
-
-                        return TypeResult.Complete;
-                    }
-                    else 
-                    {
-                        return TypeResult.Error;
-                    }
+                    return left;
+                }
+                else if (right != null)
+                {
+                    return right;
+                }
+                else if(up != null)
+                {
+                    return up;
+                }
+                else if (down != null)
+                {
+                    return down;
                 }
 
-                if(resultDown == TypeResult.Found || resultDown == TypeResult.Complete)
-                {
-                    SetCurretPosComplete();
-
-                    Position.Y--;
-
-                    var result = GetTypeDirFromMark(down);
-
-                    if (result == TypeDir.None)
-                        return TypeResult.NotFound;
-
-                    if (result == TypeDir.Any || result == TypeDir.UpAndDown)
-                    {
-                        CurretDir = result;
-                        return TypeResult.Found;
-                    }
-                    else if (result == TypeDir.Point)
-                    {
-                        if (prevChar == CORNER)
-                            return TypeResult.Error;
-
-                        return TypeResult.Complete;
-                    }
-                    else
-                    {
-                        return TypeResult.Error;
-                    }
-
-                }
-
-                return TypeResult.NotFound;
+                return null;
             }
 
-            private TypeResult MoveLeftOrRight()
+            private Cell CellUp()
             {
-                Position.X--;
+                Vector2 curPos = new Vector2(Position);
 
-                var resultLeft = GetCurretChar(out char left);
+                curPos.Y--;
 
-                Position.X++;
-                Position.X++;
+                Cell cell = Board.GetCell(curPos);
 
-                var resultRight = GetCurretChar(out char right);
-
-                Position.X--;
-
-                if (resultLeft == TypeResult.Found || resultLeft == TypeResult.Complete)
-                {
-                    SetCurretPosComplete();
-
-                    Position.X--;
-
-                    var result = GetTypeDirFromMark(left);
-
-                    if (result == TypeDir.None)
-                        return TypeResult.NotFound;
-
-                    if (result == TypeDir.Any || result == TypeDir.LeftAndRight)
-                    {
-                        CurretDir = result;
-                        return TypeResult.Found;
-                    }
-                    else if (result == TypeDir.Point)
-                    {
-                        return TypeResult.Complete;
-                    }
-                    else
-                    {
-                        return TypeResult.Error;
-                    }
-                }
-
-                if (resultRight == TypeResult.Found || resultRight == TypeResult.Complete)
-                {
-                    SetCurretPosComplete();
-
-                    Position.X++;
-
-                    var result = GetTypeDirFromMark(right);
-                    
-                    if (result == TypeDir.None)
-                        return TypeResult.NotFound;
-
-                    if (result == TypeDir.Any || result == TypeDir.LeftAndRight)
-                    {
-                        CurretDir = result;
-                        return TypeResult.Found;
-                    }
-                    else if (result == TypeDir.Point)
-                    {
-                        return TypeResult.Complete;
-                    }
-                    else
-                    {
-                        return TypeResult.Error;
-                    }
-
-                }
-
-                return TypeResult.NotFound;
-            }
-
-            private TypeResult GetCurretChar(out char toReturn)
-            {
-                try
-                {
-                    toReturn = Grid[Position.Y][Position.X];
-
-                    if (toReturn == FREE_SPACE || toReturn == COMPLETE_STEP)
-                        return TypeResult.NotFound;
-
-                    if (toReturn == POINT)
-                        return TypeResult.Complete;
-                    else
-                        return TypeResult.Found;
-                }
-                catch
-                {
-                    toReturn = '*';
-                    return TypeResult.Error;
-                }
-            }
-
-            private TypeDir GetTypeDirFromMark(char mark)
-            {
-
-                switch (mark)
-                {
-                    default:
-                    case FREE_SPACE:
-                    case COMPLETE_STEP:
-                        return TypeDir.None;
-
-                    case CORNER: return TypeDir.Any;
-                    case LEFT_RIGHT: return TypeDir.LeftAndRight;
-                    case UP_DOWN: return TypeDir.UpAndDown;
-                    case POINT: return TypeDir.Point;
-                }
-
-            }
-
-            private void SetCurretPosComplete()
-            {
-                Grid[Position.Y][Position.X] = COMPLETE_STEP;
-            }
-
-            public bool IsCurretCorn()
-            {
-                if (BufPos.Count >= 4)
-                    return Corn.IsCurrent(BufPos.Previous, BufPos.Next);
+                if (cell != null && cell.CellType != TypeCell.CompleteStep && cell.CellType != TypeCell.FreeSpace && (CurrentDir == TypeDir.Any || CurrentDir == TypeDir.UpDown))
+                    return cell;
                 else
-                    return true;
+                    return null;
+            }
+
+            private Cell CellDown()
+            {
+                Vector2 curPos = new Vector2(Position);
+                curPos.Y++;
+
+                Cell cell = Board.GetCell(curPos);
+
+                if (cell != null && cell.CellType != TypeCell.CompleteStep && cell.CellType != TypeCell.FreeSpace && (CurrentDir == TypeDir.Any || CurrentDir == TypeDir.UpDown))
+                    return cell;
+                else
+                    return null;
+            }
+
+            private Cell CellLeft()
+            {
+                Vector2 curPos = new Vector2(Position);
+                curPos.X--;
+
+                Cell cell = Board.GetCell(curPos);
+
+                if (cell != null && cell.CellType != TypeCell.CompleteStep && cell.CellType != TypeCell.FreeSpace && (CurrentDir == TypeDir.Any || CurrentDir == TypeDir.LeftRight))
+                    return cell;
+                else
+                    return null;
+            }
+
+            private Cell CellRight()
+            {
+                Vector2 curPos = new Vector2(Position);
+                curPos.X++;
+
+                Cell cell = Board.GetCell(curPos);
+
+                if (cell != null && cell.CellType != TypeCell.CompleteStep && cell.CellType != TypeCell.FreeSpace && (CurrentDir == TypeDir.Any || CurrentDir == TypeDir.LeftRight))
+                    return cell;
+                else
+                    return null;
             }
 
         }
-
-
-        ///Итак, что я выяснил
-        ///1. Нужно проверять перепутья. Если есть перепутья, то можно от туда в любую сторону
-        ///2. Нужно проверять, не является ли следующая клетка концом, т.е. X
-        ///3. Нужна пред идущая клетка
-
+        
         public static bool Line(char[][] grid)
         {
             Bot bot = new Bot(grid);
 
-            TypeResult result;
-
             do
             {
 
-                result = bot.Move();
+                var result = bot.Move();
 
-                WriteGrid(bot.Grid);
-
-                if (!bot.IsCurretCorn())
-                    return false;
+                WriteBoard(bot.Board);
 
                 if (result == TypeResult.Complete)
                 {
                     return true;
-
-                }else if (result == TypeResult.Error)
+                }
+                else if(result == TypeResult.Error)
                 {
                     return false;
                 }
@@ -1378,14 +1334,14 @@ namespace CataSolutions
 
         }
 
-        private static void WriteGrid(char[][] grid)
+        private static void WriteBoard(Board board)
         {
 
-            for (int i = 0; i < grid.Length; i++)
+            for (int i = 0; i < board.Cells.Length; i++)
             {
-                for (int j = 0; j < grid[i].Length; j++)
+                for (int j = 0; j < board.Cells[i].Length; j++)
                 {
-                    System.Diagnostics.Debug.Write(grid[i][j]);
+                    System.Diagnostics.Debug.Write(board.Cells[i][j].Mark);
                 }
                 System.Diagnostics.Debug.WriteLine("");
             }
