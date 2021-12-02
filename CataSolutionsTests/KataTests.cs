@@ -415,6 +415,182 @@ namespace CataSolutions.Tests
             Assert.AreEqual(false, Kata.Line(grid));
         }
 
+
+        //Other tests... Я устал босс
+
+        [TestMethod]
+        public void GridExBreadcrumbsExtras()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "   X-----+  ",
+            "         |  ",
+            "   X-----+  ",
+            "         |  ",
+            "   ------+  ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBreadcrumbsOneWay()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "         X   ",
+            "   X+++  +-+ ",
+            "    +++--+ | ",
+            "         +-+ ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBreadcrumbsTwoWays()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "            ",
+            "   X+++     ",
+            "    +++X    ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExLoopAmbiguous()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "            ",
+            "   X-----+  ",
+            "   X     |  ",
+            "   |     |  ",
+            "   |     |  ",
+            "   +-----+  ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExMoreEdgeCases()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "             ",
+            "    +++X     ",
+            "    +++      ",
+            "   X+++      ",
+            "             ",
+            "    ++++X    ",
+            "   X++++     ",
+            "    ++++     ",
+            "   X++++     ",
+            "       X     ",
+            "    ++++     ",
+            "   X++++X    ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExSpiralAnticlockwise()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "   +-----+  ",
+            "   |+---+|  ",
+            "   ||+-+||  ",
+            "   |||X+||  ",
+            "   X|+--+|  ",
+            "    +----+  ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExSpiralClockwise()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "    +----+  ",
+            "    |+--+|  ",
+            "    ||X+||  ",
+            "    |+-+||  ",
+            "    +---+|  ",
+            "X--------+  ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(true, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "      +------+",
+            "      |      |",
+            "X-----+------+",
+            "      |       ",
+            "      X       ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "      +------+",
+            "      |      |",
+            "X-----+------+",
+            "      |       ",
+            "      X       ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "      +------+",
+            "      |      |",
+            "X-----+------+",
+            "      |       ",
+            "      X       ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+        [TestMethod]
+        public void GridExBad5()
+        {
+            var grid = MakeGrid(new[]
+            {
+            "      +------+",
+            "      |      |",
+            "X-----+------+",
+            "      |       ",
+            "      X       ",
+        });
+            WriteGrid(grid);
+            Assert.AreEqual(false, Kata.Line(grid));
+        }
+
+
         private char[][] MakeGrid(string[] arr)
         {
             int y = arr.Length;
