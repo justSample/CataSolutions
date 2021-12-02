@@ -530,66 +530,6 @@ namespace CataSolutions.Tests
             Assert.AreEqual(true, Kata.Line(grid));
         }
 
-        [TestMethod]
-        public void GridExBad5()
-        {
-            var grid = MakeGrid(new[]
-            {
-            "      +------+",
-            "      |      |",
-            "X-----+------+",
-            "      |       ",
-            "      X       ",
-        });
-            WriteGrid(grid);
-            Assert.AreEqual(false, Kata.Line(grid));
-        }
-
-        [TestMethod]
-        public void GridExBad5()
-        {
-            var grid = MakeGrid(new[]
-            {
-            "      +------+",
-            "      |      |",
-            "X-----+------+",
-            "      |       ",
-            "      X       ",
-        });
-            WriteGrid(grid);
-            Assert.AreEqual(false, Kata.Line(grid));
-        }
-
-        [TestMethod]
-        public void GridExBad5()
-        {
-            var grid = MakeGrid(new[]
-            {
-            "      +------+",
-            "      |      |",
-            "X-----+------+",
-            "      |       ",
-            "      X       ",
-        });
-            WriteGrid(grid);
-            Assert.AreEqual(false, Kata.Line(grid));
-        }
-
-        [TestMethod]
-        public void GridExBad5()
-        {
-            var grid = MakeGrid(new[]
-            {
-            "      +------+",
-            "      |      |",
-            "X-----+------+",
-            "      |       ",
-            "      X       ",
-        });
-            WriteGrid(grid);
-            Assert.AreEqual(false, Kata.Line(grid));
-        }
-
 
         private char[][] MakeGrid(string[] arr)
         {

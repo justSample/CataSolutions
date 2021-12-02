@@ -1001,7 +1001,7 @@ namespace CataSolutions
 
             public char Mark { get; private set; }
 
-            public TypeCell CellType { get; private set; }
+            public TypeCell CellType { get; set; }
 
             public Cell(Vector2 pos, char mark)
             {
@@ -1181,14 +1181,14 @@ namespace CataSolutions
                         break;
                     case TypeCell.Corner:
 
-                        if(currentCell.CellType == TypeCell.LeftRight)
+                        if(CurrentDir == TypeDir.LeftRight)
                         {
                             CurrentDir = TypeDir.UpDown;
                             Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
                             Position = new Vector2(nextCell.Position);
                             return TypeResult.Step;
                         }
-                        else if(currentCell.CellType == TypeCell.UpDown)
+                        else if(CurrentDir == TypeDir.UpDown)
                         {
                             CurrentDir = TypeDir.LeftRight;
                             Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
@@ -1237,18 +1237,22 @@ namespace CataSolutions
 
                 if(left != null)
                 {
+                    CurrentDir = TypeDir.LeftRight;
                     return left;
                 }
                 else if (right != null)
                 {
+                    CurrentDir = TypeDir.LeftRight;
                     return right;
                 }
                 else if(up != null)
                 {
+                    CurrentDir = TypeDir.UpDown;
                     return up;
                 }
                 else if (down != null)
                 {
+                    CurrentDir = TypeDir.UpDown;
                     return down;
                 }
 
