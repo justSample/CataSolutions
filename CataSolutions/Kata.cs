@@ -291,118 +291,187 @@ namespace CataSolutions
             throw new ArgumentException("No missing values were found in the provided list.");
         }
 
+        #region Strings Mix
 
         //https://www.codewars.com/kata/5629db57620258aa9d000014/train/csharp
         public static string Mix(string firstStr, string secondStr)
         {
+            Dictionary<string, int> pairsFirst = new Dictionary<string, int>();
+            Dictionary<string, int> pairsSecond = new Dictionary<string, int>();
 
-            List<string> listToReturn = new List<string>();
+            StringMixer mixer = new StringMixer();
 
-            Dictionary<char, int> firstCharsDictionary = new Dictionary<char, int>();
-            Dictionary<char, int> secondCharsDictionary = new Dictionary<char, int>();
+            firstStr = new string(firstStr.Where(c => !char.IsWhiteSpace(c) && char.IsLetter(c) && !char.IsUpper(c)).ToArray());
+            secondStr = new string(secondStr.Where(c => !char.IsWhiteSpace(c) && char.IsLetter(c) && !char.IsUpper(c)).ToArray());
 
-            char[] firstStrChars = firstStr.ToCharArray();
-            char[] secondStrChars = secondStr.ToCharArray();
-
-            for (int i = 0; i < secondStrChars.Length; i++)
+            foreach (var item in firstStr)
             {
-                if (firstCharsDictionary.ContainsKey(secondStrChars[i])) continue;
+                int count = firstStr.Where(c => c == item).Count();
 
-                int countInFirstArr = firstStrChars.Where(c => c == secondStrChars[i]).Count();
-                firstCharsDictionary.Add(secondStrChars[i], countInFirstArr);
+                if (count <= 1) continue;
 
-            }
-
-            for (int i = 0; i < firstStrChars.Length; i++)
-            {
-                if (secondCharsDictionary.Keys.Contains(firstStrChars[i])) continue;
-
-                int countInSecondArr = secondStrChars.Where(c => c == firstStrChars[i]).Count();
-                secondCharsDictionary.Add(firstStrChars[i], countInSecondArr);
-            }
-
-            firstCharsDictionary.Remove(' ');
-            secondCharsDictionary.Remove(' ');
-
-            var tempFirstArr = firstCharsDictionary.Keys.Where(k => !char.IsLetterOrDigit(k)).ToArray();
-
-            for (int i = 0; i < tempFirstArr.Length; i++)
-            {
-                firstCharsDictionary.Remove(tempFirstArr[i]);
-            }
-
-            var tempSecondArr = secondCharsDictionary.Keys.Where(k => !char.IsLetterOrDigit(k)).ToArray();
-
-            for (int i = 0; i < tempSecondArr.Length; i++)
-            {
-                secondCharsDictionary.Remove(tempSecondArr[i]);
-            }
-
-            foreach (var charValue in firstCharsDictionary)
-            {
-
-                if (!secondCharsDictionary.ContainsKey(charValue.Key)) continue;
-
-                if (charValue.Value < 2 && secondCharsDictionary[charValue.Key] < 2) continue;
-
-                string toAdd = string.Empty;
-
-                if (secondCharsDictionary[charValue.Key] > charValue.Value)
+                if (!pairsFirst.ContainsKey(item.ToString()))
                 {
-                    toAdd += "2:";
-
-                    for (int i = 0; i < secondCharsDictionary[charValue.Key]; i++)
-                    {
-                        toAdd += charValue.Key;
-                    }
-
+                    pairsFirst.Add(item.ToString(), count);
+                    mixer.Add(new StrInfo(1, item, count));
                 }
-                else if (secondCharsDictionary[charValue.Key] < charValue.Value)
-                {
-                    toAdd += "1:";
+            }
 
-                    for (int i = 0; i < charValue.Value; i++)
-                    {
-                        toAdd += charValue.Key;
-                    }
+            foreach (var item in secondStr)
+            {
+                int count = secondStr.Where(c => c == item).Count();
+
+                if (count <= 1) continue;
+
+                if (!pairsSecond.ContainsKey(item.ToString()))
+                {
+                    pairsSecond.Add(item.ToString(), count);
+                    mixer.Add(new StrInfo(2, item, count));
+                }
+            }
+            
+            
+
+            return mixer.GetString();
+        }
+
+        public class StringMixer
+        {
+            public List<StrInfo> Info { get; set; }
+
+            public StringMixer()
+            {
+                Info = new List<StrInfo>();
+            }
+
+            public void Add(StrInfo info)
+            {
+                StrInfo tempInfo = Info.Find(i => i.EqualItem(info));
+
+                if (tempInfo == null)
+                {
+                    Info.Add(new StrInfo(info));
                 }
                 else
                 {
-                    toAdd += "=:";
+                    int index = Info.IndexOf(tempInfo);
 
-                    for (int i = 0; i < charValue.Value; i++)
+                    if (info.CountItems > tempInfo.CountItems)
                     {
-                        toAdd += charValue.Key;
+                        Info[index].AuthorId = info.AuthorId;
+                        Info[index].Item = info.Item;
+                        Info[index].CountItems = info.CountItems;
                     }
-
+                    else if(info.CountItems < tempInfo.CountItems) /// ???
+                    {
+                        Info[index].AuthorId = tempInfo.AuthorId;
+                        Info[index].Item = tempInfo.Item;
+                        Info[index].CountItems = tempInfo.CountItems;
+                    }
+                    else
+                    {
+                        Info[index].AuthorId = 0;
+                    }
                 }
 
-
-                toAdd += "/";
-
-                listToReturn.Add(toAdd);
+                
             }
 
-
-            if (listToReturn.Count == 0) return "";
-
-
-            listToReturn = listToReturn.OrderByDescending(s => s.Count()).ThenByDescending(s => s).ToList();
-
-            if(listToReturn.Last().Last() == '/')
-                listToReturn[listToReturn.Count - 1] = listToReturn.Last().Remove(listToReturn.Last().Count() - 1, 1);
-
-            string toReturn = string.Empty;
-
-            for (int i = 0; i < listToReturn.Count; i++)
+            public string GetString()
             {
-                toReturn += listToReturn[i];
+                Info = Info
+                    .OrderByDescending(info => info.CountItems)
+                    .ThenBy(info => 
+                    {
+                        if (info.AuthorId == 0)
+                            return 2;
+                        else if (info.AuthorId == 2)
+                            return 1;
+                        else
+                            return 0;
+                    })
+                    .ThenBy(info => info.Item)
+                    .ToList();
+
+                string toReturn = "";
+
+                //2:eeeee/2:yy/=:hh/=:rr
+
+                for (int i = 0; i < Info.Count; i++)
+                {
+                    if((i + 1) >= Info.Count)
+                    {
+                        toReturn += Info[i];
+                    }
+                    else
+                    {
+                        toReturn += Info[i] + "/";
+                    }
+                }
+
+                return toReturn;
             }
 
-            // your code
-            return toReturn;
         }
 
+        public class StrInfo
+        {
+            public int AuthorId { get; set; }
+            public char Item { get; set; }
+            public int CountItems { get; set; }
+
+            public StrInfo() { }
+            public StrInfo(StrInfo info)
+            {
+                AuthorId = info.AuthorId;
+                Item = info.Item;
+                CountItems = info.CountItems;
+            }
+            public StrInfo(int authorId, char item, int countItems)
+            {
+                AuthorId = authorId;
+                Item = item;
+                CountItems = countItems;
+            }
+
+            public bool EqualItem(StrInfo info)
+            {
+                if (info.Item == Item)
+                {
+                    return true;
+                }
+                else
+                {
+                    return false;
+                }
+            }
+
+            public override string ToString()
+            {
+                char authorMark;
+                if(AuthorId == 0)
+                {
+                    authorMark = '=';
+                }
+                else
+                {
+                    authorMark = AuthorId.ToString()[0];
+                }
+
+                string buf = "";
+
+                for (int i = 0; i < CountItems; i++)
+                {
+                    buf += Item;
+                }
+
+                //Example: 1:aaaa, где 1 - id, aaaa - count char
+                return $"{authorMark}:{buf}";
+            }
+
+        }
+
+        #endregion
 
         //бля, чувак решил это в 4 сука строчки ахахахаххахаа
         //А у меня оптимизированнее
