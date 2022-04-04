@@ -117,7 +117,9 @@ namespace CataSolutions.Tests
         [TestMethod]
         public void MoveZeroesTest()
         {
-            CollectionAssert.AreEqual(new int[] { 1, 2, 1, 1, 3, 1, 0, 0, 0, 0 }, Kata.BestMoveZeroes(new int[] { 1, 2, 0, 1, 0, 1, 0, 3, 0, 1 }));
+            CollectionAssert.AreEqual(new int[] { 1, 2, 1, 1, 3, 1, 0, 0, 0, 0 }, Kata.MoveZeroesRemember(new int[] { 1, 2, 0, 1, 0, 1, 0, 3, 0, 1 }));
+            CollectionAssert.AreEqual(new int[] { 1, 6, 3, 1, 1, 6, 8, 9, 1, 0 }, Kata.MoveZeroesRemember(new int[] { 0, 1, 6, 3, 1, 1, 6, 8, 9, 1 }));
+            CollectionAssert.AreEqual(new int[] { 6, 2, 1, 3, 5, 0, 0, 0, 0, 0 }, Kata.MoveZeroesRemember(new int[] { 0, 6, 0, 2, 0, 1, 0, 3, 0, 5 }));
         }
 
 
@@ -566,6 +568,20 @@ namespace CataSolutions.Tests
         }
 
         #endregion
+
+        [TestMethod]
+        public void ClosestMultiple10Test()
+        {
+            for (int i = 10; i <= 14; ++i)
+            {
+                Assert.AreEqual(10, Kata.ClosestMultiple10(i));
+            }
+
+            for (int i = 15; i <= 20; ++i)
+            {
+                Assert.AreEqual(20, Kata.ClosestMultiple10(i));
+            }
+        }
 
 
     }

@@ -66,7 +66,6 @@ namespace CataSolutions
             return result;
         }
 
-
         public static string Solve(string s)
         {
             char[] chars = s.ToCharArray();
@@ -85,7 +84,6 @@ namespace CataSolutions
         {
             return s.Count(char.IsLower) < s.Length / 2 ? s.ToUpper() : s.ToLower();
         }
-
 
         public static string ToWeirdCase(string s)
         {
@@ -231,7 +229,6 @@ namespace CataSolutions
             .Where(x => x != str)
             .ToList();
 
-
         public static int[] MoveZeroes(int[] arr)
         {
 
@@ -249,8 +246,6 @@ namespace CataSolutions
         {
             return arr.OrderBy(x => x == 0).ToArray();
         }
-
-
 
         public static int FindMissing(List<int> list)
         {
@@ -1423,6 +1418,44 @@ namespace CataSolutions
 
         #endregion
 
+
+        public static int[] MoveZeroesRemember(int[] arr)
+        {
+            int countZeros = arr.Where(a => a == 0).Count();
+
+            List<int> newArr = arr.Where(a => a != 0).ToList();
+
+            for (int i = 0; i < countZeros; i++)
+            {
+                newArr.Add(0);
+            }
+
+            return newArr.ToArray();
+        }
+
+
+        public static int ClosestMultiple10(int num)
+        {
+            int howMuch = num % 10;
+
+            int result = num;
+
+            if(howMuch < 5)
+            {
+                result -= howMuch;
+            }
+            else
+            {
+                result += (10 - howMuch);
+            }
+
+            return result;
+        }
+
+        public int BestClosestMultiple10(int num)
+        {
+            return (int)(Math.Round(num / 10d, MidpointRounding.AwayFromZero) * 10);
+        }
 
     }
 }
