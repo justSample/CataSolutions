@@ -584,5 +584,124 @@ namespace CataSolutions.Tests
         }
 
 
+        #region DiamondTests
+
+        [TestMethod]
+        public void TestNull()
+        {
+            Assert.IsNull(Kata.DiamondPrint(0));
+            Assert.IsNull(Kata.DiamondPrint(-2));
+            Assert.IsNull(Kata.DiamondPrint(2));
+        }
+
+        [TestMethod]
+        public void TestDiamond1()
+        {
+            var expected = new StringBuilder();
+            expected.Append("*\n");
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(1));
+        }
+        [TestMethod]
+        public void TestDiamond3()
+        {
+            var expected = new StringBuilder();
+            expected.Append(" *\n");
+            expected.Append("***\n");
+            expected.Append(" *\n");
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(3));
+        }
+
+        [TestMethod]
+        public void TestDiamond5()
+        {
+            var expected = new StringBuilder();
+            expected.Append("  *\n");
+            expected.Append(" ***\n");
+            expected.Append("*****\n");
+            expected.Append(" ***\n");
+            expected.Append("  *\n");
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(5));
+        }
+
+        [TestMethod]
+        public void TestDiamond7()
+        {
+            var expected = new StringBuilder();
+            expected.Append("   *\n");
+            expected.Append("  ***\n");
+            expected.Append(" *****\n");
+            expected.Append("*******\n");
+            expected.Append(" *****\n");
+            expected.Append("  ***\n");
+            expected.Append("   *\n");
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(7));
+        }
+
+        [TestMethod]
+        public void TestDiamond9()
+        {
+            var expected = new StringBuilder();
+
+            expected.Append("    *\n");
+            expected.Append("   ***\n");
+            expected.Append("  *****\n");
+            expected.Append(" *******\n");
+            expected.Append("*********\n");
+            expected.Append(" *******\n");
+            expected.Append("  *****\n");
+            expected.Append("   ***\n");
+            expected.Append("    *\n");
+
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(9));
+        }
+
+        [TestMethod]
+        public void TestDiamond11()
+        {
+            var expected = new StringBuilder();
+            expected.Append("     *\n");
+            expected.Append("    ***\n");
+            expected.Append("   *****\n");
+            expected.Append("  *******\n");
+            expected.Append(" *********\n");
+            expected.Append("***********\n");
+            expected.Append(" *********\n");
+            expected.Append("  *******\n");
+            expected.Append("   *****\n");
+            expected.Append("    ***\n");
+            expected.Append("     *\n");
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(11));
+        }
+
+        [TestMethod]
+        public void TestDiamond13()
+        {
+            var expected = new StringBuilder();
+
+            expected.Append("      *\n");
+            expected.Append("     ***\n");
+            expected.Append("    *****\n");
+            expected.Append("   *******\n");
+            expected.Append("  *********\n");
+            expected.Append(" ***********\n");
+            expected.Append("*************\n");
+            expected.Append(" ***********\n");
+            expected.Append("  *********\n");
+            expected.Append("   *******\n");
+            expected.Append("    *****\n");
+            expected.Append("     ***\n");
+            expected.Append("      *\n");
+
+
+            Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(13));
+        }
+
+        #endregion
+
     }
 }

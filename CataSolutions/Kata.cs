@@ -1457,5 +1457,56 @@ namespace CataSolutions
             return (int)(Math.Round(num / 10d, MidpointRounding.AwayFromZero) * 10);
         }
 
+        public static string DiamondPrint(int countStages)
+        {
+            if (countStages % 2 == 0 || countStages < 0) return null;
+
+            int center = (int)Math.Floor((double)countStages / 2d);
+
+            string[] lines = new string[countStages];
+
+            for (int i = 0; i < countStages; i++)
+            {
+                if(i == center)
+                {
+                    string line = string.Concat(new string('*', i * 2 + 1),"\n");
+                    lines[i] = line;
+                    break;
+                }
+                else
+                {
+                    int spaceCount = (center - i) ;
+                    string line = string.Concat(new string(' ', spaceCount),
+                                          new string('*', i * 2 + 1),
+                                          "\n");
+                    lines[i] = line;
+                    lines[lines.Length - 1 - i] = line;
+                }
+
+                
+            }
+
+            return string.Join("", lines);
+        }
+
+        public static string BestDiamondPrint(int n)
+        {
+            if (n % 2 == 0 || n < 0)
+            {
+                return null;
+            }
+
+            int middle = n / 2;
+            StringBuilder sb = new StringBuilder();
+            for (int index = 0; index < n; index++)
+            {
+                sb.Append(' ', Math.Abs(middle - index));
+                sb.Append('*', n - Math.Abs(middle - index) * 2);
+                sb.Append("\n");
+            }
+
+            return sb.ToString();
+        }
+
     }
 }
