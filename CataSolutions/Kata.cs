@@ -704,38 +704,19 @@ namespace CataSolutions
         //Такое чувство, они меняются когда попадают на тест
         public static long NextBiggerNumber(long n)
         {
-            char[] numbersChar = n.ToString().ToCharArray();
-
-            if (numbersChar.Length == 1) return n;
-
-            int maxNumber = (int)n;
-
-            for (int i = numbersChar.Length - 1; i >= 0; i--)
+            string str = GetNumbers(n);
+            for (long i = n + 1; i <= long.Parse(str); i++)
             {
-                if (!((i - 1) >= 0)) continue;
-                
-                char[] bufArr = new char[numbersChar.Length];
-
-                for (long j = 0; j < numbersChar.Length; j++)
+                if (GetNumbers(n) == GetNumbers(i))
                 {
-                    bufArr[j] = numbersChar[j];
+                    return i;
                 }
-
-                char buf = bufArr[i];
-                bufArr[i] = bufArr[i - 1];
-                bufArr[i - 1] = buf;
-
-                int number = int.Parse(new string(bufArr));
-
-                if (number > maxNumber)
-                {
-                    maxNumber = number;
-                    break;
-                }
-
             }
-
-            return maxNumber;
+            return -1;
+        }
+        public static string GetNumbers(long number)
+        {
+            return string.Join("", number.ToString().ToCharArray().OrderByDescending(x => x));
         }
 
         //Я не знаю почему тут не работало как надо, но у него почему-то работает :(
@@ -1506,6 +1487,46 @@ namespace CataSolutions
             }
 
             return sb.ToString();
+        }
+
+
+        public static bool AreTheySameComp(int[] a, int[] b)
+        {
+            if (a == null || b == null) return false;
+
+            List<int> listA = new List<int>(a);
+            List<int> listB = new List<int>(b);
+
+            for (int i = 0; listA.Count > 0 && listB.Count > 0;)
+            {
+                int sqr = listA[i] * listA[i];
+                bool find = listB.Any(num => num == sqr);
+
+                if (!find) return find;
+
+                listA.RemoveAt(i);
+                int bIndex = listB.FindIndex(num => num == sqr);
+                if (bIndex != -1)
+                    listB.RemoveAt(bIndex);
+            }
+
+            if (listA.Count == 0 && listB.Count == 0) return true;
+
+            return false;
+        }
+
+        public static bool BestAreTheySameComp(int[] a, int[] b)
+        {
+            if ((a == null) || (b == null))
+            {
+                return false;
+            }
+
+            int[] copy = a.Select(x => x * x).ToArray();
+            Array.Sort(copy);
+            Array.Sort(b);
+
+            return copy.SequenceEqual(b);
         }
 
     }

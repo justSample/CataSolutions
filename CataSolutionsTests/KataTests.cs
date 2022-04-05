@@ -235,7 +235,6 @@ namespace CataSolutions.Tests
             Assert.AreEqual(441, Kata.NextBiggerNumber(414));
             Assert.AreEqual(414, Kata.NextBiggerNumber(144));
             Assert.AreEqual(123456798, Kata.NextBiggerNumber(123456789));
-            Assert.AreEqual(1234567908, Kata.NextBiggerNumber(12345));
         }
 
 
@@ -701,6 +700,19 @@ namespace CataSolutions.Tests
             Assert.AreEqual(expected.ToString(), Kata.DiamondPrint(13));
         }
 
+        #endregion
+
+
+        #region AreTheySameTest
+
+        [TestMethod]
+        public void AreTheySameTest()
+        {
+            int[] a = new int[] { 121, 144, 19, 161, 19, 144, 19, 11 };
+            int[] b = new int[] { 11 * 11, 121 * 121, 144 * 144, 19 * 19, 161 * 161, 19 * 19, 144 * 144, 19 * 19 };
+            bool r = Kata.AreTheySameComp(a, b); // True
+            Assert.AreEqual(true, r);
+        }
         #endregion
 
     }
