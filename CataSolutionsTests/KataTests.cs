@@ -715,5 +715,46 @@ namespace CataSolutions.Tests
         }
         #endregion
 
+        #region Spiralizor
+
+        //https://www.codewars.com/kata/534e01fbbb17187c7e0000c6/train/csharp
+
+        [TestMethod]
+        public void SpiralizeTest05()
+        {
+            int input = 5;
+            int[,] expected = new int[,]{
+            {1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 1},
+            {1, 1, 1, 0, 1},
+            {1, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1}
+        };
+
+            int[,] actual = Kata.Spiralize(input);
+            Assert.AreEqual(expected, actual);
+        }
+
+        [TestMethod]
+        public void SpiralizeTest08()
+        {
+            int input = 8;
+            int[,] expected = new int[,]{
+            {1, 1, 1, 1, 1, 1, 1, 1},
+            {0, 0, 0, 0, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 0, 1},
+            {1, 0, 0, 0, 0, 1, 0, 1},
+            {1, 0, 1, 0, 0, 1, 0, 1},
+            {1, 0, 1, 1, 1, 1, 0, 1},
+            {1, 0, 0, 0, 0, 0, 0, 1},
+            {1, 1, 1, 1, 1, 1, 1, 1},
+        };
+
+            int[,] actual = Kata.Spiralize(input);
+            Assert.AreEqual(expected, actual);
+        }
+
+        #endregion
+
     }
 }

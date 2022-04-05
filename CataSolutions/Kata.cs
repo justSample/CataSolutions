@@ -1529,5 +1529,12 @@ namespace CataSolutions
             return copy.SequenceEqual(b);
         }
 
+
+        public static int[,] Spiralize(int size)
+        {
+            // Happy coding...
+            return null;
+        }
+
     }
 }
