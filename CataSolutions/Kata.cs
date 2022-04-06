@@ -1529,12 +1529,35 @@ namespace CataSolutions
             return copy.SequenceEqual(b);
         }
 
+        #region Spiralize
 
         public static int[,] Spiralize(int size)
         {
-            // Happy coding...
-            return null;
+            return new Steper().GetSpiral(size);
         }
+
+        public class Steper
+        {
+            private const int ICON_STEP = 1;
+            private const int ICON_NO_STEP = 0;
+
+
+            public int[,] GetSpiral(int size)
+            {
+                int[,] spiral = new int[size, size];
+
+
+                return null;
+            } 
+
+            private void Step()
+            {
+
+            }
+
+        }
+
+        #endregion
 
     }
 }
