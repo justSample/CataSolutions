@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Globalization;
+using System.IO;
 using System.Linq;
 using System.Text;
 using System.Text.RegularExpressions;
@@ -157,7 +158,7 @@ namespace CataSolutions
 
                 for (int j = 0; j < array2.Length; j++)
                 {
-                    if(reg.Match(array2[j]).Length > 0)
+                    if (reg.Match(array2[j]).Length > 0)
                     {
                         toReturn.Add(array1[i]);
                         break;
@@ -188,13 +189,13 @@ namespace CataSolutions
 
             for (int i = 0; i < textChars.Count; i++)
             {
-                if(textChars[i] == '#' && i != 0)
+                if (textChars[i] == '#' && i != 0)
                 {
                     textChars.RemoveAt(i);
                     textChars.RemoveAt(i - 1);
                     i = -1;
                 }
-                else if(textChars[i] == '#' && (i == 0 || i == textChars.Count - 1))
+                else if (textChars[i] == '#' && (i == 0 || i == textChars.Count - 1))
                 {
                     textChars.RemoveAt(i);
                     i = -1;
@@ -249,7 +250,7 @@ namespace CataSolutions
 
         public static int FindMissing(List<int> list)
         {
-            
+
             int difference = int.MinValue;
             int indexDifferent = -1;
 
@@ -324,8 +325,8 @@ namespace CataSolutions
                     mixer.Add(new StrInfo(2, item, count));
                 }
             }
-            
-            
+
+
 
             return mixer.GetString();
         }
@@ -357,7 +358,7 @@ namespace CataSolutions
                         Info[index].Item = info.Item;
                         Info[index].CountItems = info.CountItems;
                     }
-                    else if(info.CountItems < tempInfo.CountItems) /// ???
+                    else if (info.CountItems < tempInfo.CountItems) /// ???
                     {
                         Info[index].AuthorId = tempInfo.AuthorId;
                         Info[index].Item = tempInfo.Item;
@@ -369,14 +370,14 @@ namespace CataSolutions
                     }
                 }
 
-                
+
             }
 
             public string GetString()
             {
                 Info = Info
                     .OrderByDescending(info => info.CountItems)
-                    .ThenBy(info => 
+                    .ThenBy(info =>
                     {
                         if (info.AuthorId == 0)
                             return 2;
@@ -394,7 +395,7 @@ namespace CataSolutions
 
                 for (int i = 0; i < Info.Count; i++)
                 {
-                    if((i + 1) >= Info.Count)
+                    if ((i + 1) >= Info.Count)
                     {
                         toReturn += Info[i];
                     }
@@ -444,7 +445,7 @@ namespace CataSolutions
             public override string ToString()
             {
                 char authorMark;
-                if(AuthorId == 0)
+                if (AuthorId == 0)
                 {
                     authorMark = '=';
                 }
@@ -530,7 +531,7 @@ namespace CataSolutions
             for (int i = 1; 0 <= (bufTime - 60); i++)
             {
                 min++;
-                bufTime -=  60;
+                bufTime -= 60;
             }
 
             int sec = bufTime;
@@ -570,13 +571,13 @@ namespace CataSolutions
 
             int bufTime = seconds;
 
-            for (; 0 <= (bufTime - 31536000) ;)
+            for (; 0 <= (bufTime - 31536000);)
             {
                 years++;
                 bufTime -= 31536000;
             }
 
-            for (; 0 <= (bufTime - 86400) ;)
+            for (; 0 <= (bufTime - 86400);)
             {
                 days++;
                 bufTime -= 86400;
@@ -598,9 +599,9 @@ namespace CataSolutions
 
             List<string> toReturn = new List<string>();
 
-            if(years != 0)
+            if (years != 0)
             {
-                if(years > 1)
+                if (years > 1)
                 {
                     toReturn.Add("{0}" + years + " years{1}");
                 }
@@ -614,7 +615,7 @@ namespace CataSolutions
             {
                 if (days > 1)
                 {
-                    toReturn.Add("{0}"+ days + " days{1}");
+                    toReturn.Add("{0}" + days + " days{1}");
                 }
                 else
                 {
@@ -759,7 +760,7 @@ namespace CataSolutions
             double avg = GetAvg(prodArr);
             float med = GetMedian(prodArr);
 
-            string toReturn = string.Format("Range: {0} Average: {1} Median: {2}", range, avg.ToString("0.00",new NumberFormatInfo()).Replace(',','.'), med.ToString("0.00").Replace(',', '.'));
+            string toReturn = string.Format("Range: {0} Average: {1} Median: {2}", range, avg.ToString("0.00", new NumberFormatInfo()).Replace(',', '.'), med.ToString("0.00").Replace(',', '.'));
 
             return toReturn;
         }
@@ -850,7 +851,7 @@ namespace CataSolutions
         private static double GetAvg(int[] prod)
         {
             double sum = 0;
-            
+
             for (int i = 0; i < prod.Length; i++)
             {
                 sum += prod[i];
@@ -863,10 +864,10 @@ namespace CataSolutions
 
         private static float GetMedian(int[] prod)
         {
-            
+
             int lenghtAllArr = prod.Length;
 
-            if((lenghtAllArr % 2) == 0)
+            if ((lenghtAllArr % 2) == 0)
             {
                 int firstIndexArr = lenghtAllArr / 2;
                 int secondIndexArr = firstIndexArr - 1;
@@ -877,7 +878,7 @@ namespace CataSolutions
             else
             {
                 int midleIndex = lenghtAllArr / 2;
-                
+
                 return (float)prod[midleIndex];
             }
         }
@@ -917,7 +918,7 @@ namespace CataSolutions
                             int symbolIndex = line.IndexOf(commentSymbols[j]);
                             int razdelIIndex = line.IndexOf('\n');
 
-                            if(razdelIIndex == -1)
+                            if (razdelIIndex == -1)
                             {
                                 isHaveEnv = false;
                                 line = line.Remove(symbolIndex);
@@ -930,7 +931,7 @@ namespace CataSolutions
                         }
                     }
 
-                    if(line.IndexOf('\n') == -1)
+                    if (line.IndexOf('\n') == -1)
                         isHaveEnv = false;
 
                     line = line.TrimEnd();
@@ -939,7 +940,7 @@ namespace CataSolutions
                         line += '\n';
 
                     toReturn += line;
-                    
+
                     beginIndex = (i + 1);
 
                     countLine = 0;
@@ -950,7 +951,7 @@ namespace CataSolutions
                     countLine++;
                 }
 
-                
+
             }
 
             return toReturn;
@@ -1029,7 +1030,7 @@ namespace CataSolutions
 
             public static Vector2 operator +(Vector2 v1, Vector2 v2)
             {
-                return new Vector2() { X = (v1.X + v2.X), Y = (v1.Y + v2.Y)};
+                return new Vector2() { X = (v1.X + v2.X), Y = (v1.Y + v2.Y) };
             }
 
             public static Vector2 operator -(Vector2 v1, Vector2 v2)
@@ -1157,7 +1158,7 @@ namespace CataSolutions
 
                 }
 
-                
+
             }
 
         }
@@ -1185,7 +1186,7 @@ namespace CataSolutions
                 {
                     for (int j = 0; j < Board.Cells[i].Length; j++)
                     {
-                        if(Board.Cells[i][j].Mark == POINT)
+                        if (Board.Cells[i][j].Mark == POINT)
                         {
                             Position = new Vector2(Board.Cells[i][j].Position);
                             isPoint = true;
@@ -1196,7 +1197,7 @@ namespace CataSolutions
                         break;
                 }
 
-                
+
             }
 
             public TypeResult Move()
@@ -1226,23 +1227,23 @@ namespace CataSolutions
                         break;
                     case TypeCell.Corner:
 
-                        if(CurrentDir == TypeDir.LeftRight)
+                        if (CurrentDir == TypeDir.LeftRight)
                         {
                             CurrentDir = TypeDir.UpDown;
                             Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
                             Position = new Vector2(nextCell.Position);
                             return TypeResult.Step;
                         }
-                        else if(CurrentDir == TypeDir.UpDown)
+                        else if (CurrentDir == TypeDir.UpDown)
                         {
                             CurrentDir = TypeDir.LeftRight;
                             Board.SetCharCell(currentCell.Position, TypeCell.CompleteStep);
                             Position = new Vector2(nextCell.Position);
                             return TypeResult.Step;
                         }
-                        else if(currentCell.CellType == TypeCell.Corner)
+                        else if (currentCell.CellType == TypeCell.Corner)
                         {
-                            if(CurrentDir == TypeDir.LeftRight)
+                            if (CurrentDir == TypeDir.LeftRight)
                             {
                                 //UpDown
                                 CurrentDir = TypeDir.UpDown;
@@ -1250,7 +1251,7 @@ namespace CataSolutions
                                 Position = new Vector2(nextCell.Position);
                                 return TypeResult.Step;
                             }
-                            else if(CurrentDir == TypeDir.UpDown)
+                            else if (CurrentDir == TypeDir.UpDown)
                             {
                                 //LeftRight
                                 CurrentDir = TypeDir.LeftRight;
@@ -1280,7 +1281,7 @@ namespace CataSolutions
                 Cell left = CellLeft();
                 Cell right = CellRight();
 
-                if(left != null)
+                if (left != null)
                 {
                     CurrentDir = TypeDir.LeftRight;
                     return left;
@@ -1290,7 +1291,7 @@ namespace CataSolutions
                     CurrentDir = TypeDir.LeftRight;
                     return right;
                 }
-                else if(up != null)
+                else if (up != null)
                 {
                     CurrentDir = TypeDir.UpDown;
                     return up;
@@ -1358,7 +1359,7 @@ namespace CataSolutions
             }
 
         }
-        
+
         public static bool Line(char[][] grid)
         {
             Bot bot = new Bot(grid);
@@ -1374,7 +1375,7 @@ namespace CataSolutions
                 {
                     return true;
                 }
-                else if(result == TypeResult.Error)
+                else if (result == TypeResult.Error)
                 {
                     return false;
                 }
@@ -1421,7 +1422,7 @@ namespace CataSolutions
 
             int result = num;
 
-            if(howMuch < 5)
+            if (howMuch < 5)
             {
                 result -= howMuch;
             }
@@ -1448,15 +1449,15 @@ namespace CataSolutions
 
             for (int i = 0; i < countStages; i++)
             {
-                if(i == center)
+                if (i == center)
                 {
-                    string line = string.Concat(new string('*', i * 2 + 1),"\n");
+                    string line = string.Concat(new string('*', i * 2 + 1), "\n");
                     lines[i] = line;
                     break;
                 }
                 else
                 {
-                    int spaceCount = (center - i) ;
+                    int spaceCount = (center - i);
                     string line = string.Concat(new string(' ', spaceCount),
                                           new string('*', i * 2 + 1),
                                           "\n");
@@ -1464,7 +1465,7 @@ namespace CataSolutions
                     lines[lines.Length - 1 - i] = line;
                 }
 
-                
+
             }
 
             return string.Join("", lines);
@@ -1533,7 +1534,7 @@ namespace CataSolutions
 
         public static int[,] Spiralize(int size)
         {
-            return new Steper().GetSpiral(size);
+            return new Spiralizer().GetSpiral(size);
         }
 
         public enum Direction
@@ -1544,37 +1545,123 @@ namespace CataSolutions
             LEFT
         }
 
-        public class Steper
+        public class Spiralizer
         {
-            private const int ICON_STEP = 1;
-            private const int ICON_NO_STEP = 0;
-
-
-            private Direction _direction;
+            private int[,] _spiral;
+            private Position _posStep = new Position();
+            private Direction _direction = Direction.RIGHT;
 
             public int[,] GetSpiral(int size)
             {
-                int[,] spiral = new int[size, size];
+                _spiral = new int[size, size];
 
-                for (int i = 0; i < size; i++)
+                for (int y = 0; y < size; y++)
                 {
+                    for (; y < 3; y++)
+                    {
 
+                        MakeStep(size);
+                        NextDir();
+                    }
+
+                    int delimiter = 0;
+                    int countStep = size - 2;
+
+                    for (; y < size; y++)
+                    {
+                        if(delimiter < 2)
+                        {
+                            MakeStep(countStep);
+                            NextDir();
+                            delimiter++;
+                        }
+                        else
+                        {
+                            countStep -= 2;
+                            delimiter = 0;
+                            y--;
+                        }
+                    }
                 }
-
-
-                return null;
+                return _spiral;
             }
+
 
             private void NextDir()
             {
                 switch (_direction)
                 {
                     case Direction.UP:
+                        _direction = Direction.RIGHT;
                         break;
-                        case Direction.RIGHT:
+                    case Direction.RIGHT:
+                        _direction = Direction.DOWN;
                         break;
-                        case Direction.LEFT
+                    case Direction.DOWN:
+                        _direction = Direction.LEFT;
+                        break;
+                    case Direction.LEFT:
+                        _direction = Direction.UP;
+                        break;
+
                 }
+            }
+
+            private void MakeStep(int countStep)
+            {
+                switch (_direction)
+                {
+                    case Direction.UP:
+                        for (int i = 0; i < countStep; i++)
+                        {
+                            _spiral[_posStep.Y, _posStep.X] = 1;
+                            _posStep.Y--;
+                        }
+                        _posStep.Y++;
+                        break;
+
+                    case Direction.RIGHT:
+                        for (int i = 0; i < countStep; i++)
+                        {
+                            _spiral[_posStep.Y, _posStep.X] = 1;
+                            _posStep.X++;
+                        }
+                        _posStep.X--;
+                        break;
+
+                    case Direction.DOWN:
+                        for (int i = 0; i < countStep; i++)
+                        {
+                            _spiral[_posStep.Y, _posStep.X] = 1;
+                            _posStep.Y++;
+                        }
+                        _posStep.Y--;
+                        break;
+
+                    case Direction.LEFT:
+
+                        for (int i = 0; i < countStep; i++)
+                        {
+                            _spiral[_posStep.Y, _posStep.X] = 1;
+                            _posStep.X--;
+                        }
+                        _posStep.X++;
+                        break;
+
+                }
+            }
+
+        }
+
+        public class Position
+        {
+            public int X { get; set; } 
+            public int Y { get; set; }
+
+            public Position()
+            {
+                X = 0;
+                Y = 0;
             }
 
         }
