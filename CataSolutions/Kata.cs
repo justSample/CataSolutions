@@ -1536,11 +1536,21 @@ namespace CataSolutions
             return new Steper().GetSpiral(size);
         }
 
+        public enum Direction
+        {
+            UP,
+            RIGHT,
+            DOWN,
+            LEFT
+        }
+
         public class Steper
         {
             private const int ICON_STEP = 1;
             private const int ICON_NO_STEP = 0;
 
+
+            private Direction _direction;
 
             public int[,] GetSpiral(int size)
             {
@@ -1553,6 +1563,18 @@ namespace CataSolutions
 
 
                 return null;
+            }
+
+            private void NextDir()
+            {
+                switch (_direction)
+                {
+                    case Direction.UP:
+                        break;
+                        case Direction.RIGHT:
+                        break;
+                        case Direction.LEFT
+                }
             }
 
         }
