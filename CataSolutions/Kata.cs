@@ -1546,13 +1546,13 @@ namespace CataSolutions
             {
                 int[,] spiral = new int[size, size];
 
+                for (int i = 0; i < size; i++)
+                {
+
+                }
+
 
                 return null;
-            } 
-
-            private void Step()
-            {
-
             }
 
         }
