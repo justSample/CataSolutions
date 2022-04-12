@@ -700,7 +700,6 @@ namespace CataSolutions
             return completeResult;
         }
 
-
         //У меня проходят все тесты.... Но почему-то не проходят на сайте. Проверял на входе и выходе значения... 
         //Такое чувство, они меняются когда попадают на тест
         public static long NextBiggerNumber(long n)
@@ -715,6 +714,7 @@ namespace CataSolutions
             }
             return -1;
         }
+
         public static string GetNumbers(long number)
         {
             return string.Join("", number.ToString().ToCharArray().OrderByDescending(x => x));
@@ -1672,8 +1672,190 @@ namespace CataSolutions
 
         public static bool ValidateSolution(int[][] board)
         {
-            return false;
+            SudokyBlocks blocks = new SudokyBlocks(board);
+
+            for (int i = 0; i < blocks.Blocks.Count; i++)
+            {
+                if (!blocks.Blocks[i].IsCorrect()) return false;
+            }
+
+            List<SudokuElement> elements = new List<SudokuElement>();
+
+            for (int i = 0; i < board.Length; i++)
+            {
+                for (int j = 0; j < board[i].Length; j++)
+                {
+                    elements.Add(new SudokuElement(board[i][j]));
+                    elements[elements.Count - 1].TakeHorizontal(board, j);
+                    elements[elements.Count - 1].TakeVertical(board, i);
+                }
+            }
+
+            for (int i = 0; i < elements.Count; i++)
+            {
+                if (!elements[i].IsRight()) return false;
+            }
+
+            return true;
         }
+
+        public class SudokuElement
+        {
+            private int _element;
+
+            private int[] _horizontal;
+            private int[] _vertical;
+
+            public SudokuElement(int element)
+            {
+                _element = element;
+            }
+
+            public void TakeVertical(int[][] board, int posX)
+            {
+                _vertical = new int[board.Length];
+
+                for (int y = 0; y < board.Length; y++)
+                {
+                    _vertical[y] = board[y][posX];
+
+                }
+
+            }
+
+            public void TakeHorizontal(int[][] board, int posY)
+            {
+                _horizontal = new int[board[posY].Length];
+
+                for (int x = 0; x < board[posY].Length; x++)
+                {
+                    _horizontal[x] = board[posY][x];
+
+                }
+            }
+
+            public bool IsRight()
+            {
+
+                int countHorizontal = _horizontal.Where(x => x == _element).Count();
+                int countVertical = _vertical.Where(y => y == _element).Count();
+
+                if(countHorizontal > 1 || countVertical > 1) 
+                    return false;
+                return true;
+
+            }
+
+        }
+
+        public class SudokyBlocks
+        {
+
+            private List<int[]> _lines;
+
+            public List<SudokyBlock> Blocks;
+
+            public SudokyBlocks(int[][] board)
+            {
+                _lines = new List<int[]>();
+                Blocks = new List<SudokyBlock>();
+
+                int maxStage = (int)Math.Sqrt(board.Length);
+
+                for (int stage = 0; stage < maxStage; stage++)
+                {
+                    for (int y = 0; y < board.Length; y++)
+                    {
+                        int[] line = new int[3];
+
+                        for (int x = stage * 3, i = 0; x < ((stage + 1) * 3); x++, i++)
+                        {
+                            line[i] = board[y][x];
+                        }
+
+                        _lines.Add(line);
+
+                        if(_lines.Count > 2)
+                        {
+                            int[] toLine = new int[9];
+
+                            int indexLine = 0;
+
+                            for (int i = 0; i < _lines.Count; i++)
+                            {
+                                for (int j = 0; j < _lines[i].Length; j++)
+                                {
+                                    toLine[indexLine] = _lines[i][j];
+                                    indexLine++;
+                                }
+                            }
+                            Blocks.Add(new SudokyBlock(toLine));
+                            _lines.Clear();
+                        }
+
+                    }
+
+                }
+            }
+
+        }
+
+        public class SudokyBlock
+        {
+
+            private int[] lineBlock;
+
+            public SudokyBlock(int[] block)
+            {
+                lineBlock = block;
+            }
+
+            public bool IsCorrect()
+            {
+                for (int i = 1; i <= 10; i++)
+                {
+                    int countFind = lineBlock.Where(x => x == i).Count();
+                    if (countFind > 1) return false;
+                }
+
+                return true;
+            }
+
+        }
+
+
+        #region best
+
+        private static int[] nineNumbers = new int[] { 1, 2, 3, 4, 5, 6, 7, 8, 9 };
+
+        public static bool BestValidateSolution(int[][] board)
+        {
+            for (int i = 0; i < 9; ++i)
+            {
+                var row = new List<int>();
+                for (int j = 0; j < 9; ++j) row.Add(board[i][j]);
+                if (!ValidateNine(row)) return false;
+
+                var col = new List<int>();
+                for (int j = 0; j < 9; ++j) col.Add(board[j][i]);
+                if (!ValidateNine(col)) return false;
+
+                var block = new List<int>();
+                int br = (i / 3) * 3;
+                int bc = (i % 3) * 3;
+                for (int j = 0; j < 9; ++j) block.Add(board[br + j / 3][bc + j % 3]);
+                if (!ValidateNine(block)) return false;
+            }
+
+            return true;
+        }
+
+        private static bool ValidateNine(IList<int> nine)
+        {
+            return nineNumbers.All(nine.Contains);
+        }
+
+        #endregion
 
         #endregion
 
