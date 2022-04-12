@@ -1581,5 +1581,14 @@ namespace CataSolutions
 
         #endregion
 
+        #region Sudoku
+
+        public static bool ValidateSolution(int[][] board)
+        {
+            return false;
+        }
+
+        #endregion
+
     }
 }
