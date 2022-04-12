@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.IO;
 
 namespace CataSolutions.Tests
 {
@@ -732,7 +733,7 @@ namespace CataSolutions.Tests
         };
 
             int[,] actual = Kata.Spiralize(input);
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         [TestMethod]
@@ -751,7 +752,7 @@ namespace CataSolutions.Tests
         };
 
             int[,] actual = Kata.Spiralize(input);
-            Assert.AreEqual(expected, actual);
+            CollectionAssert.AreEqual(expected, actual);
         }
 
         #endregion
