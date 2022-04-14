@@ -800,7 +800,7 @@ namespace CataSolutions.Tests
       },
             };
 
-            
+
             public void Test(bool expected, int[][] board) => Assert.AreEqual(expected, Kata.ValidateSolution(board));
 
             [TestMethod]
@@ -848,10 +848,15 @@ namespace CataSolutions.Tests
 
             }
 
-            
-
-            #endregion
 
         }
+        #endregion
+
+        #region The Lift
+
+        //https://www.codewars.com/kata/58905bfa1decb981da00009e/train/csharp
+
+        #endregion
+
     }
 }
