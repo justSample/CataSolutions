@@ -1859,5 +1859,31 @@ namespace CataSolutions
 
         #endregion
 
+        #region To square(root) or not to square(root)
+
+        public static int[] SquareOrSquareRoot(int[] array)
+        {
+            for (int i = 0; i < array.Length; i++)
+            {
+                double resultSqrt = Math.Sqrt(array[i]);
+
+                string tempStr = resultSqrt.ToString();
+
+                if (tempStr.IndexOf(',') != -1)
+                    array[i] *= array[i];
+                else
+                    array[i] = (int)resultSqrt;
+            }
+
+            return array;
+        }
+
+        public static int[] BestSquareOrSquareRoot(int[] array)
+        {
+            return array.Select(x => (int)(Math.Sqrt(x) % 1 == 0 ? Math.Sqrt(x) : x * x)).ToArray();
+        }
+
+        #endregion
+
     }
 }
